@@ -27,7 +27,7 @@ jobs:
       run: |
         arduino-cli compile --fqbn arduino:avr:pro:cpu=8MHzatmega328 \
           --warnings all \
-          plant_weight_sensor.ino
+          plant_sensor.ino
           
     - name: Report compilation results
       run: |
