@@ -34,6 +34,7 @@
  * - Auto-dim: LED brightness reduces to 50% when battery <10% (~3 months left)
  * 
  * Battery Life: ~2.4 years on 2500mAh 18650
+ * EEPROM Life: 960+ years (buffer stored in RAM only to prevent wear)
  */
 
 #include <HX711.h>
@@ -50,14 +51,13 @@ const int LED_PIN = 9;
 const int DRY_BUTTON = 2;     // INT0 - Calibrate dry
 const int STATUS_BUTTON = 3;  // INT1 - Show water level
 
-// EEPROM addresses
+// EEPROM addresses (buffer not saved to reduce wear - lasts 960+ years!)
 const int ADDR_DRY_WEIGHT = 0;
 const int ADDR_WET_WEIGHT = 4;
 const int ADDR_CALIBRATED = 8;
 const int ADDR_NEEDS_WATER = 12;
 const int ADDR_DAYS_SINCE_ALERT = 16;
-const int ADDR_WEIGHT_BUFFER = 20;  // 60 floats = 240 bytes
-const int ADDR_BUFFER_INDEX = 260;
+// Note: Buffer stored in RAM only (ADDR 20-260 reserved but unused)
 
 // Settings
 const float WATER_THRESHOLD = 0.25;        // Water when 25% capacity remains
@@ -343,11 +343,9 @@ void calibrateDryWeight(float currentWeight) {
 }
 
 void checkForWatering(float currentWeight) {
-  // Add to circular buffer
+  // Add to circular buffer (RAM only, no EEPROM wear)
   weightBuffer[bufferIndex] = currentWeight;
-  EEPROM.put(ADDR_WEIGHT_BUFFER + (bufferIndex * 4), currentWeight);
   bufferIndex = (bufferIndex + 1) % 60;
-  EEPROM.put(ADDR_BUFFER_INDEX, bufferIndex);
   
   // Find minimum in buffer (starting dry point)
   float minWeight = weightBuffer[0];
@@ -424,11 +422,7 @@ void loadCalibration() {
   if (calibrated) {
     EEPROM.get(ADDR_DRY_WEIGHT, dryWeight);
     EEPROM.get(ADDR_WET_WEIGHT, wetWeight);
-    EEPROM.get(ADDR_BUFFER_INDEX, bufferIndex);
-    
-    for (int i = 0; i < 60; i++) {
-      EEPROM.get(ADDR_WEIGHT_BUFFER + (i * 4), weightBuffer[i]);
-    }
+    // Note: Buffer not restored from EEPROM (saves wear, refills quickly)
   }
 }
 
@@ -443,6 +437,7 @@ void clearConfiguration() {
   wateringInProgress = false;
   bufferIndex = 0;
   
+  // Clear buffer in RAM (no EEPROM writes needed)
   for (int i = 0; i < 60; i++) {
     weightBuffer[i] = 0;
   }
@@ -453,7 +448,7 @@ void clearConfiguration() {
   EEPROM.put(ADDR_NEEDS_WATER, needsWater);
   EEPROM.put(ADDR_SLEEP_COUNTER, sleepCounter);
   EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
-  EEPROM.put(ADDR_BUFFER_INDEX, bufferIndex);
+  // Note: bufferIndex not saved (RAM only)
 }
 
 void fadeLED(int durationMs) {
