@@ -1,31 +1,33 @@
 /*
- * Plant Weight Sensor with HX711 - Low Power Version
+ * Plant Weight Sensor with HX711 - Adaptive Sampling Version
  * Arduino Pro Mini
  * 
  * Features:
- * - Deep sleep mode (wakes once per day)
- * - Interrupt-based button controls
- * - LED indicator for watering needed
- * - Smart growth compensation with trend validation
- * - Rejects false positives from human interference
- * - Ultra-low power consumption
+ * - Adaptive deep sleep (1 min when dry, 24h when OK)
+ * - Automatic wet weight detection from actual watering
+ * - Windowed accumulation for slow/partial watering
+ * - Visual water level indicator (wet button)
+ * - Manual dry calibration button
+ * - Ultra-low power with smart sampling
  * 
  * Connections:
  * - HX711 DOUT    -> Pin 4
  * - HX711 SCK     -> Pin 5
  * - HX711 VCC     -> Pin 6 (power control)
  * - LED           -> Pin 9 (PWM capable)
- * - Dry Button    -> Pin 2 (INT0)
- * - Wet Button    -> Pin 3 (INT1)
+ * - Dry Button    -> Pin 2 (INT0) - Calibrate dry weight
+ * - Status Button -> Pin 3 (INT1) - Show water level visually
  * 
  * LED Behavior:
- * - Slow breathing (3x): Not calibrated (missing config)
- * - 3 quick pulses: Button press feedback
- * - 3 slow pulses: Config cleared (both buttons held 2s)
- * - Single pulse: Needs water
- * - Double pulse: Needs water + unusual pattern (14+ days since last alert)
+ * - Slow breathing (3x): Not calibrated
+ * - 3 quick pulses: Dry calibration done
+ * - Fade to level: Water level indicator (status button)
+ * - Single pulse: Needs water (checks every minute)
+ * - Double pulse: Needs water + no watering for 14+ days
  * - Fast pulsing (8x): Error (dry > wet)
- * - OFF: Plant is OK
+ * - OFF: Plant is OK (checks once per day)
+ * 
+ * Battery Life: ~2 years on 2500mAh 18650
  */
 
 #include <HX711.h>
@@ -38,44 +40,45 @@
 const int HX711_DOUT = 4;
 const int HX711_SCK = 5;
 const int HX711_VCC = 6;
-const int LED_PIN = 9;       // PWM capable pin
-const int DRY_BUTTON = 2;    // INT0
-const int WET_BUTTON = 3;    // INT1
+const int LED_PIN = 9;
+const int DRY_BUTTON = 2;     // INT0 - Calibrate dry
+const int STATUS_BUTTON = 3;  // INT1 - Show water level
 
 // EEPROM addresses
 const int ADDR_DRY_WEIGHT = 0;
 const int ADDR_WET_WEIGHT = 4;
-const int ADDR_PLANT_BASE = 8;
-const int ADDR_CALIBRATED = 12;
-const int ADDR_SLEEP_COUNTER = 16;
-const int ADDR_NEEDS_WATER = 20;
-const int ADDR_PREV_WEIGHT = 24;
-const int ADDR_GROWTH_COUNTER = 28;
-const int ADDR_DAYS_SINCE_ALERT = 32;
+const int ADDR_CALIBRATED = 8;
+const int ADDR_NEEDS_WATER = 12;
+const int ADDR_DAYS_SINCE_ALERT = 16;
+const int ADDR_WEIGHT_BUFFER = 20;  // 10 floats = 40 bytes
+const int ADDR_BUFFER_INDEX = 60;
 
 // Settings
-const float WATER_THRESHOLD = 0.25;
+const float WATER_THRESHOLD = 0.25;        // Water when 25% capacity remains
 const int STABLE_READINGS = 10;
-const int SLEEP_CYCLES_PER_DAY = 10800;  // 8s * 10800 = 24h
-const int SLEEP_CYCLES_5_SEC = 1;        // For LED flash when needs water
-const float MAX_GROWTH_PER_DAY = 5.0;    // Max realistic growth: 5 units/day (not calibrated to grams)
-const int GROWTH_CONFIRM_DAYS = 3;       // Confirm growth over 3 days
-const int ALERT_WARNING_DAYS = 14;       // Warn if no watering alert for 14 days
+const int SLEEP_CYCLES_PER_DAY = 10800;    // 8s × 10800 = 24h
+const int SLEEP_CYCLES_PER_MIN = 8;        // 8s × 8 ≈ 1 minute
+const int ALERT_WARNING_DAYS = 14;
+const int STABILITY_CHECKS = 3;            // Consecutive stable readings
+const float STABILITY_THRESHOLD = 5.0;     // Within 5 units = stable
 
 // Variables
 HX711 scale;
 float dryWeight = 0;
 float wetWeight = 0;
-float plantBaseWeight = 0;
 bool calibrated = false;
 bool needsWater = false;
 bool hasError = false;
-float previousWeight = 0;
-uint8_t growthCounter = 0;
 uint16_t daysSinceWaterAlert = 0;
 volatile bool dryButtonPressed = false;
-volatile bool wetButtonPressed = false;
+volatile bool statusButtonPressed = false;
 volatile uint16_t sleepCounter = 0;
+
+// Watering detection
+float weightBuffer[10];
+uint8_t bufferIndex = 0;
+bool wateringInProgress = false;
+uint8_t stableCount = 0;
 
 // Watchdog interrupt
 ISR(WDT_vect) {
@@ -91,20 +94,26 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   pinMode(HX711_VCC, OUTPUT);
   pinMode(DRY_BUTTON, INPUT_PULLUP);
-  pinMode(WET_BUTTON, INPUT_PULLUP);
+  pinMode(STATUS_BUTTON, INPUT_PULLUP);
   
-  // Check if woken by button
+  // Check button wake
   bool buttonWake = checkButtonWake();
   
-  // Handle LED states first
-  handleLEDState();
+  // LED state indication
+  if (!buttonWake) {
+    handleLEDState();
+  }
   
-  // Do measurement if needed
-  if (buttonWake || sleepCounter >= SLEEP_CYCLES_PER_DAY) {
+  // Determine sleep interval based on state
+  uint16_t sleepInterval = needsWater ? SLEEP_CYCLES_PER_MIN : SLEEP_CYCLES_PER_DAY;
+  
+  // Measurement timing
+  if (buttonWake || sleepCounter >= sleepInterval) {
     performMeasurement(buttonWake);
+    
     if (!buttonWake) {
       sleepCounter = 0;
-      // Increment days counter only if NOT needing water
+      // Increment days counter only when not needing water
       if (!needsWater) {
         daysSinceWaterAlert++;
         EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
@@ -118,58 +127,23 @@ void setup() {
   EEPROM.put(ADDR_SLEEP_COUNTER, sleepCounter);
   EEPROM.put(ADDR_NEEDS_WATER, needsWater);
   
-  // Go to deep sleep
+  // Sleep
   goToSleep();
 }
 
 void loop() {
 }
 
-void handleLEDState() {
-  loadCalibration();
-  
-  // Check for error condition
-  if (calibrated && dryWeight >= wetWeight) {
-    hasError = true;
-  }
-  
-  // LED behavior based on state
-  if (hasError) {
-    // Fast pulsing for error
-    for (int i = 0; i < 8; i++) {
-      fadeLED(100);
-    }
-  } else if (!calibrated) {
-    // Breathing pattern when not calibrated
-    for (int i = 0; i < 3; i++) {
-      fadeLED(600);
-    }
-  } else if (needsWater) {
-    // Single gentle pulse = needs water
-    fadeLED(400);
-    
-    // Double pulse = needs water + unusual pattern (>14 days since last alert)
-    if (daysSinceWaterAlert >= ALERT_WARNING_DAYS) {
-      delay(200);
-      fadeLED(400);
-    }
-  } else {
-    // OFF when everything is OK
-    analogWrite(LED_PIN, 0);
-  }
-}
-
 bool checkButtonWake() {
   delay(50);
   
-  // Check if both buttons pressed - config reset
-  if (digitalRead(DRY_BUTTON) == LOW && digitalRead(WET_BUTTON) == LOW) {
-    // Wait 2 seconds, check if still held
+  // Config reset - both buttons
+  if (digitalRead(DRY_BUTTON) == LOW && digitalRead(STATUS_BUTTON) == LOW) {
     unsigned long startTime = millis();
     bool stillHeld = true;
     
     while (millis() - startTime < 2000) {
-      if (digitalRead(DRY_BUTTON) == HIGH || digitalRead(WET_BUTTON) == HIGH) {
+      if (digitalRead(DRY_BUTTON) == HIGH || digitalRead(STATUS_BUTTON) == HIGH) {
         stillHeld = false;
         break;
       }
@@ -178,70 +152,142 @@ bool checkButtonWake() {
     
     if (stillHeld) {
       clearConfiguration();
-      // Slow fade pattern for reset confirmation
       for (int i = 0; i < 3; i++) {
         fadeLED(800);
       }
-      return false; // Don't process as regular button press
+      return false;
     }
   }
   
+  // Dry calibration button
   if (digitalRead(DRY_BUTTON) == LOW) {
     dryButtonPressed = true;
-    // 3 quick pulses for feedback
     for (int i = 0; i < 3; i++) {
       fadeLED(150);
     }
     return true;
   }
   
-  if (digitalRead(WET_BUTTON) == LOW) {
-    wetButtonPressed = true;
-    // 3 quick pulses for feedback
-    for (int i = 0; i < 3; i++) {
-      fadeLED(150);
-    }
-    return true;
+  // Status check button - show water level
+  if (digitalRead(STATUS_BUTTON) == LOW) {
+    statusButtonPressed = true;
+    showWaterLevel();
+    return false;  // Don't do measurement, just show status
   }
   
   return false;
 }
 
-void performMeasurement(bool isButtonWake) {
+void showWaterLevel() {
   // Power on HX711
   digitalWrite(HX711_VCC, HIGH);
   delay(100);
   
-  // Initialize HX711
   scale.begin(HX711_DOUT, HX711_SCK);
   scale.set_scale();
   delay(500);
   scale.tare();
   delay(200);
   
-  // Get current weight
   float currentWeight = getStableWeight();
   
-  // Handle button press
+  // Power off HX711
+  digitalWrite(HX711_VCC, LOW);
+  
+  loadCalibration();
+  
+  if (!calibrated) {
+    // Not calibrated - show error
+    for (int i = 0; i < 5; i++) {
+      fadeLED(100);
+    }
+    return;
+  }
+  
+  // Calculate water percentage
+  float waterRange = wetWeight - dryWeight;
+  float currentWater = currentWeight - dryWeight;
+  float waterPercent = (currentWater / waterRange);
+  
+  if (waterPercent < 0) waterPercent = 0;
+  if (waterPercent > 1.0) waterPercent = 1.0;
+  
+  // Fade up to percentage level and hold
+  int targetBrightness = (int)(waterPercent * 255);
+  int steps = 50;
+  int stepDelay = 20;  // 1 second total fade
+  
+  // Fade up to water level
+  for (int i = 0; i <= steps; i++) {
+    int brightness = (i * targetBrightness) / steps;
+    analogWrite(LED_PIN, brightness);
+    delay(stepDelay);
+  }
+  
+  // Hold at level for 3 seconds
+  delay(3000);
+  
+  // Fade out
+  for (int i = steps; i >= 0; i--) {
+    int brightness = (i * targetBrightness) / steps;
+    analogWrite(LED_PIN, brightness);
+    delay(stepDelay);
+  }
+  
+  analogWrite(LED_PIN, 0);
+}
+
+void handleLEDState() {
+  loadCalibration();
+  
+  if (calibrated && dryWeight >= wetWeight) {
+    hasError = true;
+  }
+  
+  if (hasError) {
+    for (int i = 0; i < 8; i++) {
+      fadeLED(100);
+    }
+  } else if (!calibrated) {
+    for (int i = 0; i < 3; i++) {
+      fadeLED(600);
+    }
+  } else if (needsWater) {
+    fadeLED(400);
+    
+    if (daysSinceWaterAlert >= ALERT_WARNING_DAYS) {
+      delay(200);
+      fadeLED(400);
+    }
+  } else {
+    analogWrite(LED_PIN, 0);
+  }
+}
+
+void performMeasurement(bool isButtonWake) {
+  digitalWrite(HX711_VCC, HIGH);
+  delay(100);
+  
+  scale.begin(HX711_DOUT, HX711_SCK);
+  scale.set_scale();
+  delay(500);
+  scale.tare();
+  delay(200);
+  
+  float currentWeight = getStableWeight();
+  
   if (dryButtonPressed) {
     calibrateDryWeight(currentWeight);
     dryButtonPressed = false;
   } 
-  else if (wetButtonPressed) {
-    calibrateWetWeight(currentWeight);
-    wetButtonPressed = false;
-  }
   else if (calibrated && !hasError) {
-    needsWater = monitorPlant(currentWeight);
-    
-    // Reset days counter when water alert is triggered
     if (needsWater) {
-      daysSinceWaterAlert = 0;
-      EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
+      checkForWatering(currentWeight);
+    } else {
+      checkIfNeedsWater(currentWeight);
     }
   }
   
-  // Power off HX711
   digitalWrite(HX711_VCC, LOW);
 }
 
@@ -264,68 +310,74 @@ float getStableWeight() {
 void calibrateDryWeight(float currentWeight) {
   dryWeight = currentWeight;
   
-  if (!calibrated) {
-    plantBaseWeight = dryWeight;
+  // Initial wet estimate (user should water soon after)
+  if (!calibrated || wetWeight == 0) {
+    wetWeight = dryWeight * 1.2;  // Estimate 20% heavier when wet
   }
   
-  saveCalibration();
-}
-
-void calibrateWetWeight(float currentWeight) {
-  if (dryWeight == 0 || currentWeight <= dryWeight) {
-    hasError = true;
-    return;
-  }
-  
-  wetWeight = currentWeight;
   calibrated = true;
   hasError = false;
+  needsWater = true;  // Assume needs water after dry calibration
+  
+  // Clear buffer
+  for (int i = 0; i < 10; i++) {
+    weightBuffer[i] = currentWeight;
+  }
+  bufferIndex = 0;
+  
   saveCalibration();
 }
 
-bool monitorPlant(float currentWeight) {
-  // Check for plant growth with trend validation
-  // Note: Weights are in arbitrary units (not calibrated to grams)
-  // Growth detection works with relative measurements
-  if (currentWeight > wetWeight) {
-    float estimatedGrowth = currentWeight - wetWeight;
-    
-    // Validate growth is realistic (units proportional to actual weight)
-    // MAX_GROWTH_PER_DAY and 200 are in sensor units, adjust based on your load cell
-    if (estimatedGrowth <= MAX_GROWTH_PER_DAY && estimatedGrowth < 200) {
-      // Check if consistent with previous reading
-      if (previousWeight > 0 && currentWeight >= previousWeight) {
-        // Growth is gradual and consistent
-        growthCounter++;
-        
-        // Confirm growth after multiple consecutive days
-        if (growthCounter >= GROWTH_CONFIRM_DAYS) {
-          plantBaseWeight += estimatedGrowth;
-          dryWeight += estimatedGrowth;
-          wetWeight = currentWeight;
-          growthCounter = 0;
-          saveCalibration();
-        }
-      } else {
-        // Sudden increase - might be temporary (human interference)
-        // Reset counter and wait for consistent trend
-        growthCounter = 0;
-      }
-    } else {
-      // Unrealistic growth - likely external object
-      growthCounter = 0;
+void checkForWatering(float currentWeight) {
+  // Add to circular buffer
+  weightBuffer[bufferIndex] = currentWeight;
+  EEPROM.put(ADDR_WEIGHT_BUFFER + (bufferIndex * 4), currentWeight);
+  bufferIndex = (bufferIndex + 1) % 10;
+  EEPROM.put(ADDR_BUFFER_INDEX, bufferIndex);
+  
+  // Find minimum in buffer (starting dry point)
+  float minWeight = weightBuffer[0];
+  for (int i = 1; i < 10; i++) {
+    if (weightBuffer[i] < minWeight && weightBuffer[i] > 0) {
+      minWeight = weightBuffer[i];
     }
-  } else {
-    // Weight decreased or stable - reset growth counter
-    growthCounter = 0;
   }
   
-  // Store current weight for next comparison
-  previousWeight = currentWeight;
-  EEPROM.put(ADDR_PREV_WEIGHT, previousWeight);
-  EEPROM.put(ADDR_GROWTH_COUNTER, growthCounter);
+  // Calculate threshold (25% of water capacity or 100 units minimum)
+  float waterCapacity = wetWeight - dryWeight;
+  float threshold = max(waterCapacity * 0.25, 100.0);
+  float increase = currentWeight - minWeight;
   
-  // Calculate water level
+  // Detect watering event
+  if (increase > threshold && !wateringInProgress) {
+    wateringInProgress = true;
+    stableCount = 0;
+  }
+  
+  // Monitor for stability after watering
+  if (wateringInProgress) {
+    float lastWeight = weightBuffer[(bufferIndex - 1 + 10) % 10];
+    
+    if (abs(currentWeight - lastWeight) < STABILITY_THRESHOLD) {
+      stableCount++;
+      
+      if (stableCount >= STABILITY_CHECKS) {
+        // Stable! Update wet weight
+        wetWeight = currentWeight;
+        needsWater = false;
+        wateringInProgress = false;
+        stableCount = 0;
+        daysSinceWaterAlert = 0;
+        saveCalibration();
+        EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
+      }
+    } else {
+      stableCount = 0;
+    }
+  }
+}
+
+void checkIfNeedsWater(float currentWeight) {
   float waterRange = wetWeight - dryWeight;
   float currentWater = currentWeight - dryWeight;
   float waterPercent = (currentWater / waterRange);
@@ -333,13 +385,22 @@ bool monitorPlant(float currentWeight) {
   if (waterPercent < 0) waterPercent = 0;
   if (waterPercent > 1.0) waterPercent = 1.0;
   
-  return (waterPercent < WATER_THRESHOLD);
+  if (waterPercent < WATER_THRESHOLD) {
+    needsWater = true;
+    
+    // Initialize buffer with current weight
+    for (int i = 0; i < 10; i++) {
+      weightBuffer[i] = currentWeight;
+    }
+    bufferIndex = 0;
+    
+    EEPROM.put(ADDR_NEEDS_WATER, needsWater);
+  }
 }
 
 void saveCalibration() {
   EEPROM.put(ADDR_DRY_WEIGHT, dryWeight);
   EEPROM.put(ADDR_WET_WEIGHT, wetWeight);
-  EEPROM.put(ADDR_PLANT_BASE, plantBaseWeight);
   EEPROM.put(ADDR_CALIBRATED, calibrated);
 }
 
@@ -349,31 +410,36 @@ void loadCalibration() {
   if (calibrated) {
     EEPROM.get(ADDR_DRY_WEIGHT, dryWeight);
     EEPROM.get(ADDR_WET_WEIGHT, wetWeight);
-    EEPROM.get(ADDR_PLANT_BASE, plantBaseWeight);
-    EEPROM.get(ADDR_PREV_WEIGHT, previousWeight);
-    EEPROM.get(ADDR_GROWTH_COUNTER, growthCounter);
+    EEPROM.get(ADDR_BUFFER_INDEX, bufferIndex);
+    
+    for (int i = 0; i < 10; i++) {
+      EEPROM.get(ADDR_WEIGHT_BUFFER + (i * 4), weightBuffer[i]);
+    }
   }
 }
 
 void clearConfiguration() {
   dryWeight = 0;
   wetWeight = 0;
-  plantBaseWeight = 0;
   calibrated = false;
   needsWater = false;
   hasError = false;
   sleepCounter = 0;
-  previousWeight = 0;
-  growthCounter = 0;
+  daysSinceWaterAlert = 0;
+  wateringInProgress = false;
+  bufferIndex = 0;
+  
+  for (int i = 0; i < 10; i++) {
+    weightBuffer[i] = 0;
+  }
   
   EEPROM.put(ADDR_DRY_WEIGHT, dryWeight);
   EEPROM.put(ADDR_WET_WEIGHT, wetWeight);
-  EEPROM.put(ADDR_PLANT_BASE, plantBaseWeight);
   EEPROM.put(ADDR_CALIBRATED, calibrated);
   EEPROM.put(ADDR_NEEDS_WATER, needsWater);
   EEPROM.put(ADDR_SLEEP_COUNTER, sleepCounter);
-  EEPROM.put(ADDR_PREV_WEIGHT, previousWeight);
-  EEPROM.put(ADDR_GROWTH_COUNTER, growthCounter);
+  EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
+  EEPROM.put(ADDR_BUFFER_INDEX, bufferIndex);
 }
 
 void fadeLED(int durationMs) {
@@ -381,14 +447,12 @@ void fadeLED(int durationMs) {
   int steps = 50;
   int stepDelay = halfDuration / steps;
   
-  // Fade in
   for (int i = 0; i <= steps; i++) {
     int brightness = (i * 255) / steps;
     analogWrite(LED_PIN, brightness);
     delay(stepDelay);
   }
   
-  // Fade out
   for (int i = steps; i >= 0; i--) {
     int brightness = (i * 255) / steps;
     analogWrite(LED_PIN, brightness);
@@ -402,13 +466,13 @@ void goToSleep() {
   ADCSRA = 0;
   
   for (int i = 0; i < 14; i++) {
-    if (i != DRY_BUTTON && i != WET_BUTTON) {
+    if (i != DRY_BUTTON && i != STATUS_BUTTON) {
       pinMode(i, INPUT_PULLUP);
     }
   }
   
   attachInterrupt(digitalPinToInterrupt(DRY_BUTTON), wakeUp, LOW);
-  attachInterrupt(digitalPinToInterrupt(WET_BUTTON), wakeUp, LOW);
+  attachInterrupt(digitalPinToInterrupt(STATUS_BUTTON), wakeUp, LOW);
   
   setupWatchdog(9);
   
@@ -420,7 +484,7 @@ void goToSleep() {
   sleep_disable();
   
   detachInterrupt(digitalPinToInterrupt(DRY_BUTTON));
-  detachInterrupt(digitalPinToInterrupt(WET_BUTTON));
+  detachInterrupt(digitalPinToInterrupt(STATUS_BUTTON));
 }
 
 void wakeUp() {
