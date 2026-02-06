@@ -6,7 +6,9 @@
  * - Adaptive deep sleep (2 min when dry, 24h when OK)
  * - Automatic wet weight detection from actual watering
  * - 60-minute windowed accumulation for slow/partial watering
- * - Visual water level indicator (wet button)
+ * - Visual water level indicator (status button)
+ * - Battery level indicator (status button)
+ * - Auto-dimming LED when battery low (<30%)
  * - Manual dry calibration button
  * - Ultra-low power with smart sampling
  * 
@@ -16,16 +18,20 @@
  * - HX711 VCC     -> Pin 6 (power control)
  * - LED           -> Pin 9 (PWM capable)
  * - Dry Button    -> Pin 2 (INT0) - Calibrate dry weight
- * - Status Button -> Pin 3 (INT1) - Show water level visually
+ * - Status Button -> Pin 3 (INT1) - Show water + battery level
  * 
  * LED Behavior:
  * - Slow breathing (3x): Not calibrated
  * - 3 quick pulses: Dry calibration done
- * - Fade to level: Water level indicator (status button)
+ * - Fade to level + flashes: Water % + battery level (status button)
+ *   - Water: Fade brightness shows water percentage (0-100%)
+ *   - Battery: 4 flashes (80-100%), 3 (50-80%), 2 (30-50%), 1 (10-30%)
+ *   - Battery critical: Rapid flashing (<10%)
  * - Single pulse: Needs water (checks every 2 minutes)
  * - Double pulse: Needs water + no watering for 14+ days
  * - Fast pulsing (8x): Error (dry > wet)
  * - OFF: Plant is OK (checks once per day)
+ * - Auto-dim: LED brightness reduces to 50% when battery <30%
  * 
  * Battery Life: ~2.4 years on 2500mAh 18650
  */
@@ -79,6 +85,9 @@ float weightBuffer[60];
 uint8_t bufferIndex = 0;
 bool wateringInProgress = false;
 uint8_t stableCount = 0;
+
+// Battery monitoring
+bool batteryLow = false;
 
 // Watchdog interrupt
 ISR(WDT_vect) {
@@ -213,7 +222,8 @@ void showWaterLevel() {
   if (waterPercent > 1.0) waterPercent = 1.0;
   
   // Fade up to percentage level and hold
-  int targetBrightness = (int)(waterPercent * 255);
+  int maxBrightness = batteryLow ? 128 : 255;  // Half brightness if battery low
+  int targetBrightness = (int)(waterPercent * maxBrightness);
   int steps = 50;
   int stepDelay = 20;  // 1 second total fade
   
@@ -235,6 +245,10 @@ void showWaterLevel() {
   }
   
   analogWrite(LED_PIN, 0);
+  
+  // Show battery level after water level
+  delay(500);
+  showBatteryLevel();
 }
 
 void handleLEDState() {
@@ -447,19 +461,70 @@ void fadeLED(int durationMs) {
   int steps = 50;
   int stepDelay = halfDuration / steps;
   
+  // Reduce brightness to 50% when battery is low
+  int maxBrightness = batteryLow ? 128 : 255;
+  
   for (int i = 0; i <= steps; i++) {
-    int brightness = (i * 255) / steps;
+    int brightness = (i * maxBrightness) / steps;
     analogWrite(LED_PIN, brightness);
     delay(stepDelay);
   }
   
   for (int i = steps; i >= 0; i--) {
-    int brightness = (i * 255) / steps;
+    int brightness = (i * maxBrightness) / steps;
     analogWrite(LED_PIN, brightness);
     delay(stepDelay);
   }
   
   analogWrite(LED_PIN, 0);
+}
+
+long readVcc() {
+  // Read 1.1V reference against AVcc
+  // Set the reference to Vcc and measure the internal 1.1V bandgap
+  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+  
+  delay(2);  // Wait for Vref to settle
+  ADCSRA |= _BV(ADSC);  // Start conversion
+  while (bit_is_set(ADCSRA, ADSC));  // Wait for completion
+  
+  long result = ADCL;
+  result |= ADCH << 8;
+  result = 1125300L / result;  // Back-calculate AVcc in mV
+  return result;
+}
+
+void showBatteryLevel() {
+  long vcc = readVcc();
+  
+  // Update battery low flag (under 3.5V = ~30% remaining)
+  batteryLow = (vcc < 3500);
+  
+  // Map voltage to flashes (18650 non-linear discharge curve)
+  int flashes;
+  if (vcc >= 3900) flashes = 4;      // 100-80% (4.2-3.9V)
+  else if (vcc >= 3700) flashes = 3; // 80-50% (3.9-3.7V)
+  else if (vcc >= 3500) flashes = 2; // 50-30% (3.7-3.5V)
+  else if (vcc >= 3300) flashes = 1; // 30-10% (3.5-3.3V)
+  else {
+    // <10% battery - warning (rapid flash)
+    for (int i = 0; i < 8; i++) {
+      digitalWrite(LED_PIN, HIGH);
+      delay(100);
+      digitalWrite(LED_PIN, LOW);
+      delay(100);
+    }
+    return;
+  }
+  
+  // Flash battery level
+  int brightness = batteryLow ? 128 : 255;
+  for (int i = 0; i < flashes; i++) {
+    analogWrite(LED_PIN, brightness);
+    delay(200);
+    analogWrite(LED_PIN, 0);
+    if (i < flashes - 1) delay(300);
+  }
 }
 
 void goToSleep() {
