@@ -56,7 +56,7 @@ const float WATER_THRESHOLD = 0.25;
 const int STABLE_READINGS = 10;
 const int SLEEP_CYCLES_PER_DAY = 10800;  // 8s * 10800 = 24h
 const int SLEEP_CYCLES_5_SEC = 1;        // For LED flash when needs water
-const float MAX_GROWTH_PER_DAY = 5.0;    // Max realistic growth: 5g/day
+const float MAX_GROWTH_PER_DAY = 5.0;    // Max realistic growth: 5 units/day (not calibrated to grams)
 const int GROWTH_CONFIRM_DAYS = 3;       // Confirm growth over 3 days
 
 // Variables
@@ -263,10 +263,13 @@ void calibrateWetWeight(float currentWeight) {
 
 bool monitorPlant(float currentWeight) {
   // Check for plant growth with trend validation
+  // Note: Weights are in arbitrary units (not calibrated to grams)
+  // Growth detection works with relative measurements
   if (currentWeight > wetWeight) {
     float estimatedGrowth = currentWeight - wetWeight;
     
-    // Validate growth is realistic
+    // Validate growth is realistic (units proportional to actual weight)
+    // MAX_GROWTH_PER_DAY and 200 are in sensor units, adjust based on your load cell
     if (estimatedGrowth <= MAX_GROWTH_PER_DAY && estimatedGrowth < 200) {
       // Check if consistent with previous reading
       if (previousWeight > 0 && currentWeight >= previousWeight) {
