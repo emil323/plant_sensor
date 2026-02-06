@@ -29,7 +29,6 @@
  *   - Battery critical: Rapid flashing (<10%)
  * - Single pulse: Needs water (checks every 2 minutes)
  * - Double pulse: Needs water + no watering for 14+ days
- * - Fast pulsing (8x): Error (dry > wet)
  * - OFF: Plant is OK (checks once per day)
  * - Auto-dim: LED brightness reduces to 50% when battery <10% (~3 months left)
  * 
@@ -75,7 +74,6 @@ float dryWeight = 0;
 float wetWeight = 0;
 bool calibrated = false;
 bool needsWater = false;
-bool hasError = false;
 uint16_t daysSinceWaterAlert = 0;
 volatile bool dryButtonPressed = false;
 volatile bool statusButtonPressed = false;
@@ -267,15 +265,12 @@ void showWaterLevel() {
 void handleLEDState() {
   loadCalibration();
   
+  // If dry >= wet, just treat as needs water (will auto-fix when watered)
   if (calibrated && dryWeight >= wetWeight) {
-    hasError = true;
+    needsWater = true;
   }
   
-  if (hasError) {
-    for (int i = 0; i < 8; i++) {
-      fadeLED(100);
-    }
-  } else if (!calibrated) {
+  if (!calibrated) {
     for (int i = 0; i < 3; i++) {
       fadeLED(600);
     }
@@ -307,7 +302,7 @@ void performMeasurement(bool isButtonWake) {
     calibrateDryWeight(currentWeight);
     dryButtonPressed = false;
   } 
-  else if (calibrated && !hasError) {
+  else if (calibrated) {
     if (needsWater) {
       checkForWatering(currentWeight);
     } else {
@@ -343,7 +338,6 @@ void calibrateDryWeight(float currentWeight) {
   }
   
   calibrated = true;
-  hasError = false;
   needsWater = true;  // Assume needs water after dry calibration
   
   // Clear buffer
@@ -444,7 +438,6 @@ void clearConfiguration() {
   wetWeight = 0;
   calibrated = false;
   needsWater = false;
-  hasError = false;
   sleepCounter = 0;
   daysSinceWaterAlert = 0;
   wateringInProgress = false;

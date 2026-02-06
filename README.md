@@ -56,8 +56,8 @@ Buttons:
 | Not Calibrated | Slow breathing (3 pulses, 600ms each) |
 | Button Pressed | 3 quick pulses (150ms each) |
 | Config Cleared | 3 slow pulses (800ms each) |
-| Error (dry ≥ wet) | Fast pulsing (8 pulses, 100ms each) |
 | Needs Water | Single gentle pulse (400ms) every wake |
+| Water Alert (14+ days) | Double pulse (400ms each) every wake |
 | OK | OFF |
 
 All LED patterns use smooth PWM fading for a polished appearance.
@@ -163,10 +163,14 @@ All LED patterns use smooth PWM fading for a polished appearance.
 - Press DRY button to calibrate
 - Then water plant normally - auto-detects!
 
-**LED fast flashing**:
-- Error: dry weight ≥ wet weight (very rare with auto-detection)
-- Usually means: calibrated dry on wet plant, or soil degraded
-- Fix: Clear config (hold both buttons 2s), recalibrate dry on actually dry soil
+**LED single pulse (every 2 minutes)**:
+- Plant needs water
+- Water your plant using any method
+- Device will auto-detect and update
+
+**LED double pulse (every 2 minutes)**:
+- Plant needs water AND hasn't been watered for 14+ days
+- Extra reminder in case you missed earlier alerts
 
 **LED not responding to buttons**:
 - Check button wiring (Pin 2: DRY, Pin 3: STATUS)
