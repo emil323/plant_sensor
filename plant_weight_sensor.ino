@@ -5,7 +5,7 @@
  * Features:
  * - Adaptive deep sleep (1 min when dry, 24h when OK)
  * - Automatic wet weight detection from actual watering
- * - Windowed accumulation for slow/partial watering
+ * - 60-minute windowed accumulation for slow/partial watering
  * - Visual water level indicator (wet button)
  * - Manual dry calibration button
  * - Ultra-low power with smart sampling
@@ -50,8 +50,8 @@ const int ADDR_WET_WEIGHT = 4;
 const int ADDR_CALIBRATED = 8;
 const int ADDR_NEEDS_WATER = 12;
 const int ADDR_DAYS_SINCE_ALERT = 16;
-const int ADDR_WEIGHT_BUFFER = 20;  // 10 floats = 40 bytes
-const int ADDR_BUFFER_INDEX = 60;
+const int ADDR_WEIGHT_BUFFER = 20;  // 60 floats = 240 bytes
+const int ADDR_BUFFER_INDEX = 260;
 
 // Settings
 const float WATER_THRESHOLD = 0.25;        // Water when 25% capacity remains
@@ -75,7 +75,7 @@ volatile bool statusButtonPressed = false;
 volatile uint16_t sleepCounter = 0;
 
 // Watering detection
-float weightBuffer[10];
+float weightBuffer[60];
 uint8_t bufferIndex = 0;
 bool wateringInProgress = false;
 uint8_t stableCount = 0;
@@ -320,7 +320,7 @@ void calibrateDryWeight(float currentWeight) {
   needsWater = true;  // Assume needs water after dry calibration
   
   // Clear buffer
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 60; i++) {
     weightBuffer[i] = currentWeight;
   }
   bufferIndex = 0;
@@ -332,12 +332,12 @@ void checkForWatering(float currentWeight) {
   // Add to circular buffer
   weightBuffer[bufferIndex] = currentWeight;
   EEPROM.put(ADDR_WEIGHT_BUFFER + (bufferIndex * 4), currentWeight);
-  bufferIndex = (bufferIndex + 1) % 10;
+  bufferIndex = (bufferIndex + 1) % 60;
   EEPROM.put(ADDR_BUFFER_INDEX, bufferIndex);
   
   // Find minimum in buffer (starting dry point)
   float minWeight = weightBuffer[0];
-  for (int i = 1; i < 10; i++) {
+  for (int i = 1; i < 60; i++) {
     if (weightBuffer[i] < minWeight && weightBuffer[i] > 0) {
       minWeight = weightBuffer[i];
     }
@@ -356,7 +356,7 @@ void checkForWatering(float currentWeight) {
   
   // Monitor for stability after watering
   if (wateringInProgress) {
-    float lastWeight = weightBuffer[(bufferIndex - 1 + 10) % 10];
+    float lastWeight = weightBuffer[(bufferIndex - 1 + 60) % 60];
     
     if (abs(currentWeight - lastWeight) < STABILITY_THRESHOLD) {
       stableCount++;
@@ -389,7 +389,7 @@ void checkIfNeedsWater(float currentWeight) {
     needsWater = true;
     
     // Initialize buffer with current weight
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 60; i++) {
       weightBuffer[i] = currentWeight;
     }
     bufferIndex = 0;
@@ -412,7 +412,7 @@ void loadCalibration() {
     EEPROM.get(ADDR_WET_WEIGHT, wetWeight);
     EEPROM.get(ADDR_BUFFER_INDEX, bufferIndex);
     
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 60; i++) {
       EEPROM.get(ADDR_WEIGHT_BUFFER + (i * 4), weightBuffer[i]);
     }
   }
@@ -429,7 +429,7 @@ void clearConfiguration() {
   wateringInProgress = false;
   bufferIndex = 0;
   
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 60; i++) {
     weightBuffer[i] = 0;
   }
   
