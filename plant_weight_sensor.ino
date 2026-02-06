@@ -8,7 +8,7 @@
  * - 60-minute windowed accumulation for slow/partial watering
  * - Visual water level indicator (status button)
  * - Battery level indicator (status button)
- * - Auto-dimming LED when battery low (<30%)
+ * - Auto-dimming LED when battery low (<10%)
  * - Manual dry calibration button
  * - Ultra-low power with smart sampling
  * 
@@ -31,7 +31,7 @@
  * - Double pulse: Needs water + no watering for 14+ days
  * - Fast pulsing (8x): Error (dry > wet)
  * - OFF: Plant is OK (checks once per day)
- * - Auto-dim: LED brightness reduces to 50% when battery <30%
+ * - Auto-dim: LED brightness reduces to 50% when battery <10% (~3 months left)
  * 
  * Battery Life: ~2.4 years on 2500mAh 18650
  */
@@ -497,8 +497,8 @@ long readVcc() {
 void showBatteryLevel() {
   long vcc = readVcc();
   
-  // Update battery low flag (under 3.5V = ~30% remaining)
-  batteryLow = (vcc < 3500);
+  // Update battery low flag (under 3.3V = ~10% remaining, ~3 months left)
+  batteryLow = (vcc < 3300);
   
   // Map voltage to flashes (18650 non-linear discharge curve)
   int flashes;
