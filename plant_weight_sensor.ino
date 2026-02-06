@@ -3,7 +3,7 @@
  * Arduino Pro Mini
  * 
  * Features:
- * - Adaptive deep sleep (1 min when dry, 24h when OK)
+ * - Adaptive deep sleep (2 min when dry, 24h when OK)
  * - Automatic wet weight detection from actual watering
  * - 60-minute windowed accumulation for slow/partial watering
  * - Visual water level indicator (wet button)
@@ -22,12 +22,12 @@
  * - Slow breathing (3x): Not calibrated
  * - 3 quick pulses: Dry calibration done
  * - Fade to level: Water level indicator (status button)
- * - Single pulse: Needs water (checks every minute)
+ * - Single pulse: Needs water (checks every 2 minutes)
  * - Double pulse: Needs water + no watering for 14+ days
  * - Fast pulsing (8x): Error (dry > wet)
  * - OFF: Plant is OK (checks once per day)
  * 
- * Battery Life: ~2 years on 2500mAh 18650
+ * Battery Life: ~2.4 years on 2500mAh 18650
  */
 
 #include <HX711.h>
@@ -57,7 +57,7 @@ const int ADDR_BUFFER_INDEX = 260;
 const float WATER_THRESHOLD = 0.25;        // Water when 25% capacity remains
 const int STABLE_READINGS = 10;
 const int SLEEP_CYCLES_PER_DAY = 10800;    // 8s × 10800 = 24h
-const int SLEEP_CYCLES_PER_MIN = 8;        // 8s × 8 ≈ 1 minute
+const int SLEEP_CYCLES_PER_MIN = 16;       // 8s × 16 ≈ 2 minutes
 const int ALERT_WARNING_DAYS = 14;
 const int STABILITY_CHECKS = 3;            // Consecutive stable readings
 const float STABILITY_THRESHOLD = 5.0;     // Within 5 units = stable
