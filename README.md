@@ -164,8 +164,9 @@ All LED patterns use smooth PWM fading for a polished appearance.
 - Then water plant normally - auto-detects!
 
 **LED fast flashing**:
-- Error: dry weight ≥ wet weight
-- Recalibrate both points
+- Error: dry weight ≥ wet weight (very rare with auto-detection)
+- Usually means: calibrated dry on wet plant, or soil degraded
+- Fix: Clear config (hold both buttons 2s), recalibrate dry on actually dry soil
 
 **LED not responding to buttons**:
 - Check button wiring (Pin 2: DRY, Pin 3: STATUS)
