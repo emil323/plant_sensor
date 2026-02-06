@@ -14,16 +14,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Compile Arduino sketch
-      uses: arduino/compile-sketches@v1
-      with:
-        fqbn: "arduino:avr:pro:cpu=8MHzatmega328"
-        sketch-paths: |
-          - .
-        libraries: |
-          - name: HX711
-        enable-warnings-report: true
-        
+    - name: Setup Arduino CLI
+      uses: arduino/setup-arduino-cli@v1
+      
+    - name: Install Arduino AVR core
+      run: arduino-cli core install arduino:avr
+      
+    - name: Install HX711 library
+      run: arduino-cli lib install HX711
+      
+    - name: Compile sketch
+      run: |
+        arduino-cli compile --fqbn arduino:avr:pro:cpu=8MHzatmega328 \
+          --warnings all \
+          plant_weight_sensor.ino
+          
     - name: Report compilation results
       run: |
         echo "### ✅ Compilation Results" >> $GITHUB_STEP_SUMMARY
