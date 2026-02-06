@@ -57,7 +57,8 @@ const int ADDR_WET_WEIGHT = 4;
 const int ADDR_CALIBRATED = 8;
 const int ADDR_NEEDS_WATER = 12;
 const int ADDR_DAYS_SINCE_ALERT = 16;
-// Note: Buffer stored in RAM only (ADDR 20-260 reserved but unused)
+const int ADDR_SLEEP_COUNTER = 20;
+// Note: Buffer stored in RAM only (ADDR 24-284 reserved but unused)
 
 // Settings
 const float WATER_THRESHOLD = 0.25;        // Water when 25% capacity remains
@@ -78,7 +79,7 @@ bool hasError = false;
 uint16_t daysSinceWaterAlert = 0;
 volatile bool dryButtonPressed = false;
 volatile bool statusButtonPressed = false;
-volatile uint16_t sleepCounter = 0;
+volatile uint32_t sleepCounter = 0;  // uint32_t to prevent overflow (max ~49 days)
 
 // Watering detection
 float weightBuffer[60];
@@ -94,6 +95,12 @@ ISR(WDT_vect) {
 }
 
 void setup() {
+  // Initialize buffer to zero (prevent garbage data)
+  for (int i = 0; i < 60; i++) {
+    weightBuffer[i] = 0;
+  }
+  bufferIndex = 0;
+  
   // Load state
   EEPROM.get(ADDR_SLEEP_COUNTER, sleepCounter);
   EEPROM.get(ADDR_NEEDS_WATER, needsWater);
@@ -170,18 +177,24 @@ bool checkButtonWake() {
   
   // Dry calibration button
   if (digitalRead(DRY_BUTTON) == LOW) {
-    dryButtonPressed = true;
-    for (int i = 0; i < 3; i++) {
-      fadeLED(150);
+    delay(50);  // Debounce
+    if (digitalRead(DRY_BUTTON) == LOW) {  // Verify still pressed
+      dryButtonPressed = true;
+      for (int i = 0; i < 3; i++) {
+        fadeLED(150);
+      }
+      return true;
     }
-    return true;
   }
   
   // Status check button - show water level
   if (digitalRead(STATUS_BUTTON) == LOW) {
-    statusButtonPressed = true;
-    showWaterLevel();
-    return false;  // Don't do measurement, just show status
+    delay(50);  // Debounce
+    if (digitalRead(STATUS_BUTTON) == LOW) {  // Verify still pressed
+      statusButtonPressed = true;
+      showWaterLevel();
+      return false;  // Don't do measurement, just show status
+    }
   }
   
   return false;
@@ -370,7 +383,7 @@ void checkForWatering(float currentWeight) {
   if (wateringInProgress) {
     float lastWeight = weightBuffer[(bufferIndex - 1 + 60) % 60];
     
-    if (abs(currentWeight - lastWeight) < STABILITY_THRESHOLD) {
+    if (fabs(currentWeight - lastWeight) < STABILITY_THRESHOLD) {
       stableCount++;
       
       if (stableCount >= STABILITY_CHECKS) {
