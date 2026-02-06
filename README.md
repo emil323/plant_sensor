@@ -44,8 +44,8 @@ LED:
   (Pin 9 is PWM capable for smooth fading)
 
 Buttons:
-  Dry Button: Pin 2 -> GND (INT0)
-  Wet Button: Pin 3 -> GND (INT1)
+  Dry Button:   Pin 2 -> GND (INT0) - Calibrate dry weight
+  Status Button: Pin 3 -> GND (INT1) - Show battery/water level
   (External 10kΩ pull-up resistors to VCC)
 ```
 
@@ -81,33 +81,57 @@ All LED patterns use smooth PWM fading for a polished appearance.
 
 ### Calibration
 
-1. **Calibrate Dry**:
+1. **Calibrate Dry** (One-time setup):
    - Place plant on scale when soil is DRY
    - Press DRY button (Pin 2)
    - LED flashes 3 times (confirmation)
 
-2. **Calibrate Wet**:
-   - Water plant thoroughly
-   - Wait for drainage to stop
-   - Press WET button (Pin 3)
-   - LED flashes 3 times (confirmation)
+2. **Water Normally** (Automatic):
+   - Water your plant as usual (any method works!)
+   - Device automatically detects watering and learns wet weight
+   - No button press needed!
+   - Handles: fast pour, slow pour, bottom watering, interrupted watering
 
-3. **Clear Configuration**:
+3. **Check Status** (Anytime):
+   - Press STATUS button (Pin 3) to see:
+     - Battery level: 4 flashes (100%) → 1 flash (10%) → rapid (low)
+     - Water percentage display
+
+4. **Clear Configuration** (Rare):
    - Press and hold BOTH buttons for 2 seconds
-   - LED flashes 5 times slowly (confirmation)
+   - LED flashes slowly (confirmation)
    - All calibration data cleared
    - Recalibrate from step 1
 
 ### Operation
 
-- Device wakes every 8 seconds to check buttons
-- Performs measurement once per 24 hours
-- If water level < 25%, LED flashes at each wake cycle
-- Buttons can wake device anytime for recalibration
+**Adaptive Sampling for Maximum Battery Life:**
+- When DRY (needs water): Measures every 2 minutes (monitors for watering)
+- When OK (recently watered): Measures every 24 hours (deep sleep mode)
+- Automatically switches between modes based on soil moisture
+- Buttons can wake device anytime
 
-### Growth Compensation
+**Automatic Watering Detection:**
+- 60-minute rolling buffer tracks recent weight measurements
+- Detects watering when weight increases significantly
+- Works with any watering method - no button press needed!
+- After watering detected, device waits for soil to stabilize
+- Once stable for 3 readings, updates wet weight reference
 
-When measured weight exceeds wet weight:
+**Alerts:**
+- When water level < 25%: LED pulses gently at each wake
+- When battery < 10%: LED brightness automatically reduces by half
+
+### Automatic Weight Updates
+
+**Watering Detection:**
+- Monitors 60-minute history for significant weight increase
+- Threshold: max(25% of water capacity, 100 units)
+- Waits for stability (3 consecutive readings within 5 units)
+- Updates wet weight and saves to EEPROM
+
+**Plant Growth Compensation:**
+- When measured weight exceeds wet weight
 - Calculates growth: `growth = current - wet`
 - Updates all reference weights automatically
 - Saves new calibration to EEPROM
@@ -115,29 +139,38 @@ When measured weight exceeds wet weight:
 
 ## Power Consumption
 
-| State | Current | Duration |
-|-------|---------|----------|
-| Deep Sleep | ~5 µA | 99.9% |
-| Measurement | ~15 mA | ~2s/day |
-| **Average** | **~8 µA** | **Per day** |
+| State | Current | Duration | Notes |
+|-------|---------|----------|-------|
+| Deep Sleep | ~5 µA | 99%+ | ATmega328P + HX711 off |
+| Measurement | ~15 mA | ~2-3s | HX711 powered via Pin 6 |
+| **Dry Mode** | **2.84 mAh/day** | **When needs water** | Measures every 2 min |
+| **OK Mode** | **0.13 mAh/day** | **After watering** | Measures every 24h |
 
-**Battery Life** (CR2032 220mAh):
-- Theoretical: ~3 years
-- Practical: ~1-2 years
+**Battery Life** (18650 Li-ion 2500mAh):
+- Average: **~2.4 years** (20% dry, 80% OK mode)
+- Worst case: **~2.4 years** (100% dry mode)
+- Best case: **~52 years** (100% OK mode, theoretical)
+
+**Recommended Battery:**
+- Samsung INR18650-35E (Protected) 3500mAh
+- Chemistry: Standard Li-ion (3.0-4.2V)
+- Must remove Pro Mini power LED for stated battery life!
 
 ## Troubleshooting
 
-**LED constant ON**:
-- Not calibrated yet
-- Press DRY then WET buttons
+**LED breathing pattern**:
+- Not calibrated yet (only dry weight needed)
+- Press DRY button to calibrate
+- Then water plant normally - auto-detects!
 
 **LED fast flashing**:
 - Error: dry weight ≥ wet weight
 - Recalibrate both points
 
 **LED not responding to buttons**:
-- Check button wiring to pins 2 and 3
-- Verify buttons connect to GND
+- Check button wiring (Pin 2: DRY, Pin 3: STATUS)
+- Verify buttons connect to GND when pressed
+- Check 10kΩ pull-up resistors to VCC
 
 **No weight readings**:
 - Check HX711 wiring (especially DOUT/SCK)
@@ -150,18 +183,28 @@ Adjust these constants in code:
 
 ```cpp
 const float WATER_THRESHOLD = 0.25;  // 0.25 = water at 25%
-const int SLEEP_CYCLES_PER_DAY = 10800;  // Adjust measurement frequency
-const int STABLE_READINGS = 10;  // More = slower but more stable
+const int SLEEP_CYCLES_PER_MIN = 16;  // Dry mode: 8s × 16 = 2 min
+const int SLEEP_CYCLES_PER_DAY = 10800;  // OK mode: 8s × 10800 = 24h
+const int STABLE_READINGS = 10;  // Readings needed before updating wet weight
+float weightBuffer[60];  // 60-minute rolling buffer for watering detection
 ```
 
 ## How It Works
 
 1. **Wake Cycle**: Device wakes every 8 seconds via watchdog timer
-2. **Button Check**: Checks if either button pressed (interrupt)
-3. **Daily Measurement**: Every 10,800 wake cycles (24h), takes reading
-4. **Weight Analysis**: Compares to dry/wet references
-5. **LED Update**: Shows status via LED pattern
-6. **Sleep**: Returns to deep sleep mode
+2. **Button Check**: Checks if either button pressed (interrupt-based)
+3. **Adaptive Measurement**: 
+   - DRY mode: Every 16 cycles (~2 min) - actively monitors for watering
+   - OK mode: Every 10,800 cycles (~24h) - conserves battery
+4. **Watering Detection**: 
+   - Maintains 60-minute rolling buffer of weights
+   - Finds minimum weight in buffer (dry starting point)
+   - Detects significant weight increase (>25% capacity or >100 units)
+   - Waits for stability before updating wet weight
+5. **Weight Analysis**: Compares current weight to dry/wet references
+6. **LED Update**: Shows status via smooth PWM-faded LED patterns
+7. **Deep Sleep**: ATmega328P sleep mode, HX711 powered off via Pin 6
+8. **Battery Monitoring**: Measures VCC using internal 1.1V bandgap reference
 
 ## License
 
