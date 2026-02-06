@@ -1,0 +1,34 @@
+name: Arduino CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Compile Arduino sketch
+      uses: arduino/compile-sketches@v1
+      with:
+        fqbn: "arduino:avr:pro:cpu=8MHzatmega328"
+        sketch-paths: |
+          - .
+        libraries: |
+          - name: HX711
+        enable-warnings-report: true
+        
+    - name: Report compilation results
+      run: |
+        echo "### ✅ Compilation Results" >> $GITHUB_STEP_SUMMARY
+        echo "Sketch compiled successfully for Arduino Pro Mini 8MHz (ATmega328P)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Target Board:** Arduino Pro Mini 3.3V 8MHz" >> $GITHUB_STEP_SUMMARY
+        echo "**Processor:** ATmega328P" >> $GITHUB_STEP_SUMMARY
+        echo "**Clock Speed:** 8MHz" >> $GITHUB_STEP_SUMMARY

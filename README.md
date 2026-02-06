@@ -1,14 +1,20 @@
 # Low-Power Plant Weight Sensor
 
-Arduino Pro Mini plant monitor using HX711 load cell. Measures weight once per day with deep sleep for ultra-low power consumption.
+[![Arduino CI](https://github.com/emil323/plant_sensor/workflows/Arduino%20CI/badge.svg)](https://github.com/emil323/plant_sensor/actions)
+
+Arduino Pro Mini plant monitor using HX711 load cell. Adaptive sampling (2 min when dry, 24h when OK) with automatic watering detection.
 
 ## Features
 
-- **Deep Sleep**: Wakes once per day, ~5µA sleep current
-- **Button Calibration**: Two-point calibration (dry/wet)
-- **Growth Tracking**: Automatically adjusts for plant growth
-- **LED Indicators**: Visual status without serial monitor
-- **Power Control**: HX711 powered via digital pin
+- **Adaptive Deep Sleep**: 2 min when dry, 24h when OK (~2.4 year battery life)
+- **Automatic Watering Detection**: No button press needed after watering
+- **60-Minute Windowed Accumulation**: Handles slow/interrupted watering
+- **Battery Level Indicator**: Visual battery status (1-4 flashes)
+- **Auto-Dimming**: LED brightness reduces when battery low
+- **Manual Dry Calibration**: Single button press to set dry weight
+- **Water Level Display**: Press status button to see water percentage
+- **LED Visual Feedback**: All status shown via LED patterns
+- **Power Control**: HX711 powered via digital pin for ultra-low sleep current
 
 ## Hardware
 
