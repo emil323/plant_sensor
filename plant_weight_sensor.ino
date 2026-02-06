@@ -6,7 +6,8 @@
  * - Deep sleep mode (wakes once per day)
  * - Interrupt-based button controls
  * - LED indicator for watering needed
- * - Auto plant growth compensation
+ * - Smart growth compensation with trend validation
+ * - Rejects false positives from human interference
  * - Ultra-low power consumption
  * 
  * Connections:
@@ -47,12 +48,16 @@ const int ADDR_PLANT_BASE = 8;
 const int ADDR_CALIBRATED = 12;
 const int ADDR_SLEEP_COUNTER = 16;
 const int ADDR_NEEDS_WATER = 20;
+const int ADDR_PREV_WEIGHT = 24;
+const int ADDR_GROWTH_COUNTER = 28;
 
 // Settings
 const float WATER_THRESHOLD = 0.25;
 const int STABLE_READINGS = 10;
 const int SLEEP_CYCLES_PER_DAY = 10800;  // 8s * 10800 = 24h
 const int SLEEP_CYCLES_5_SEC = 1;        // For LED flash when needs water
+const float MAX_GROWTH_PER_DAY = 5.0;    // Max realistic growth: 5g/day
+const int GROWTH_CONFIRM_DAYS = 3;       // Confirm growth over 3 days
 
 // Variables
 HX711 scale;
@@ -62,6 +67,8 @@ float plantBaseWeight = 0;
 bool calibrated = false;
 bool needsWater = false;
 bool hasError = false;
+float previousWeight = 0;
+uint8_t growthCounter = 0;
 volatile bool dryButtonPressed = false;
 volatile bool wetButtonPressed = false;
 volatile uint16_t sleepCounter = 0;
@@ -255,16 +262,43 @@ void calibrateWetWeight(float currentWeight) {
 }
 
 bool monitorPlant(float currentWeight) {
-  // Check for plant growth
+  // Check for plant growth with trend validation
   if (currentWeight > wetWeight) {
     float estimatedGrowth = currentWeight - wetWeight;
-    if (estimatedGrowth < 200) {
-      plantBaseWeight += estimatedGrowth;
-      dryWeight += estimatedGrowth;
-      wetWeight = currentWeight;
-      saveCalibration();
+    
+    // Validate growth is realistic
+    if (estimatedGrowth <= MAX_GROWTH_PER_DAY && estimatedGrowth < 200) {
+      // Check if consistent with previous reading
+      if (previousWeight > 0 && currentWeight >= previousWeight) {
+        // Growth is gradual and consistent
+        growthCounter++;
+        
+        // Confirm growth after multiple consecutive days
+        if (growthCounter >= GROWTH_CONFIRM_DAYS) {
+          plantBaseWeight += estimatedGrowth;
+          dryWeight += estimatedGrowth;
+          wetWeight = currentWeight;
+          growthCounter = 0;
+          saveCalibration();
+        }
+      } else {
+        // Sudden increase - might be temporary (human interference)
+        // Reset counter and wait for consistent trend
+        growthCounter = 0;
+      }
+    } else {
+      // Unrealistic growth - likely external object
+      growthCounter = 0;
     }
+  } else {
+    // Weight decreased or stable - reset growth counter
+    growthCounter = 0;
   }
+  
+  // Store current weight for next comparison
+  previousWeight = currentWeight;
+  EEPROM.put(ADDR_PREV_WEIGHT, previousWeight);
+  EEPROM.put(ADDR_GROWTH_COUNTER, growthCounter);
   
   // Calculate water level
   float waterRange = wetWeight - dryWeight;
@@ -291,6 +325,8 @@ void loadCalibration() {
     EEPROM.get(ADDR_DRY_WEIGHT, dryWeight);
     EEPROM.get(ADDR_WET_WEIGHT, wetWeight);
     EEPROM.get(ADDR_PLANT_BASE, plantBaseWeight);
+    EEPROM.get(ADDR_PREV_WEIGHT, previousWeight);
+    EEPROM.get(ADDR_GROWTH_COUNTER, growthCounter);
   }
 }
 
@@ -302,6 +338,8 @@ void clearConfiguration() {
   needsWater = false;
   hasError = false;
   sleepCounter = 0;
+  previousWeight = 0;
+  growthCounter = 0;
   
   EEPROM.put(ADDR_DRY_WEIGHT, dryWeight);
   EEPROM.put(ADDR_WET_WEIGHT, wetWeight);
@@ -309,6 +347,8 @@ void clearConfiguration() {
   EEPROM.put(ADDR_CALIBRATED, calibrated);
   EEPROM.put(ADDR_NEEDS_WATER, needsWater);
   EEPROM.put(ADDR_SLEEP_COUNTER, sleepCounter);
+  EEPROM.put(ADDR_PREV_WEIGHT, previousWeight);
+  EEPROM.put(ADDR_GROWTH_COUNTER, growthCounter);
 }
 
 void fadeLED(int durationMs) {
