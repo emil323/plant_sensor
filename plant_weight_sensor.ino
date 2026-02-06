@@ -23,6 +23,7 @@
  * - 3 quick pulses: Button press feedback
  * - 3 slow pulses: Config cleared (both buttons held 2s)
  * - Single pulse: Needs water
+ * - Double pulse: Needs water + unusual pattern (14+ days since last alert)
  * - Fast pulsing (8x): Error (dry > wet)
  * - OFF: Plant is OK
  */
@@ -50,6 +51,7 @@ const int ADDR_SLEEP_COUNTER = 16;
 const int ADDR_NEEDS_WATER = 20;
 const int ADDR_PREV_WEIGHT = 24;
 const int ADDR_GROWTH_COUNTER = 28;
+const int ADDR_DAYS_SINCE_ALERT = 32;
 
 // Settings
 const float WATER_THRESHOLD = 0.25;
@@ -58,6 +60,7 @@ const int SLEEP_CYCLES_PER_DAY = 10800;  // 8s * 10800 = 24h
 const int SLEEP_CYCLES_5_SEC = 1;        // For LED flash when needs water
 const float MAX_GROWTH_PER_DAY = 5.0;    // Max realistic growth: 5 units/day (not calibrated to grams)
 const int GROWTH_CONFIRM_DAYS = 3;       // Confirm growth over 3 days
+const int ALERT_WARNING_DAYS = 14;       // Warn if no watering alert for 14 days
 
 // Variables
 HX711 scale;
@@ -69,6 +72,7 @@ bool needsWater = false;
 bool hasError = false;
 float previousWeight = 0;
 uint8_t growthCounter = 0;
+uint16_t daysSinceWaterAlert = 0;
 volatile bool dryButtonPressed = false;
 volatile bool wetButtonPressed = false;
 volatile uint16_t sleepCounter = 0;
@@ -81,6 +85,7 @@ void setup() {
   // Load state
   EEPROM.get(ADDR_SLEEP_COUNTER, sleepCounter);
   EEPROM.get(ADDR_NEEDS_WATER, needsWater);
+  EEPROM.get(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
   
   // Configure pins
   pinMode(LED_PIN, OUTPUT);
@@ -99,6 +104,11 @@ void setup() {
     performMeasurement(buttonWake);
     if (!buttonWake) {
       sleepCounter = 0;
+      // Increment days counter only if NOT needing water
+      if (!needsWater) {
+        daysSinceWaterAlert++;
+        EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
+      }
     }
   } else {
     sleepCounter++;
@@ -135,8 +145,14 @@ void handleLEDState() {
       fadeLED(600);
     }
   } else if (needsWater) {
-    // Single gentle pulse
+    // Single gentle pulse = needs water
     fadeLED(400);
+    
+    // Double pulse = needs water + unusual pattern (>14 days since last alert)
+    if (daysSinceWaterAlert >= ALERT_WARNING_DAYS) {
+      delay(200);
+      fadeLED(400);
+    }
   } else {
     // OFF when everything is OK
     analogWrite(LED_PIN, 0);
@@ -217,6 +233,12 @@ void performMeasurement(bool isButtonWake) {
   }
   else if (calibrated && !hasError) {
     needsWater = monitorPlant(currentWeight);
+    
+    // Reset days counter when water alert is triggered
+    if (needsWater) {
+      daysSinceWaterAlert = 0;
+      EEPROM.put(ADDR_DAYS_SINCE_ALERT, daysSinceWaterAlert);
+    }
   }
   
   // Power off HX711
