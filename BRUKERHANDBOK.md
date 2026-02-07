@@ -189,14 +189,17 @@ Trykk på **STATUS-knappen** (høyre knapp) én gang for å se komplett status:
 ## Batteri og vedlikehold
 
 ### Batterilevetid
-- **Normal drift:** ~2,4 år på 3500mAh batteri
-- **I tørr modus:** ~2,4 år (enheten sjekker oftere, men fortsatt effektivt!)
-- **I OK modus:** 52+ år (teoretisk, sjekker én gang per dag)
+- **Gjennomsnittlig stueplante** (1×/uke): **~40 år** på 3500mAh
+- **Tørste planter** (2×/uke): ~27 år
+- **Sukkulenter** (1×/2 uker): ~47 år
+- Enheten bruker kun høy strøm når planten faktisk trenger vann (~4% av tiden)
+- Batteriet vil sannsynligvis vare lenger enn elektronikken!
+- Planlegg å bytte batteri hvert 10-15 år som forebyggende vedlikehold
 
 ### Når skal batteriet byttes
 - LED dimmes automatisk til 50% når batteri <10%
-- Dette gir deg ~3 måneders varsel
-- STATUS-knappen viser batterinivå (se [Sjekke status](#sjekk-batterinivå))
+- Med så lang levetid vil du sannsynligvis bytte proaktivt hvert 10-15 år
+- STATUS-knappen viser batterinivå (se [Sjekke status](#sjekke-status))
 
 ### Anbefalt batteri
 - **Samsung INR18650-35E (Protected)** - 3500mAh
@@ -233,7 +236,7 @@ For maksimal batterilevetid bør Arduino Pro Minis strøm-LED fjernes (loddes av
 |----------|---------------|
 | **Strøm i dvale** | ~5 µA (ultra-lavt strømforbruk) |
 | **Målestrøm** | ~15 mA i 2-3 sekunder |
-| **Batterilevetid** | ~2,4 år (3500mAh) |
+| **Batterilevetid** | 28-47 år (avhenger av plante) |
 | **Sampling (Tørr)** | Hvert 2. minutt |
 | **Sampling (OK)** | Hver 24. time |
 | **Vektcellekapasitet** | 1-5kg (avhenger av modell) |

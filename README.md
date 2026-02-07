@@ -146,15 +146,25 @@ All LED patterns use smooth PWM fading for a polished appearance.
 | **Dry Mode** | **2.84 mAh/day** | **When needs water** | Measures every 2 min |
 | **OK Mode** | **0.13 mAh/day** | **After watering** | Measures every 24h |
 
-**Battery Life** (18650 Li-ion 2500mAh):
-- Average: **~2.4 years** (20% dry, 80% OK mode)
-- Worst case: **~2.4 years** (100% dry mode)
-- Best case: **~52 years** (100% OK mode, theoretical)
+**Battery Life** (Realistic Usage):
+
+Watering frequency varies by plant, season, and conditions. Here's what to expect:
+
+| Plant Type | Watering Frequency | 2500mAh | 3500mAh |
+|------------|-------------------|---------|---------|
+| **Thirsty plants** | 2×/week (e.g., ferns) | 19 years | 27 years |
+| **Average houseplant** | 1×/week (most common) | **28 years** | **40 years** |
+| **Slow-drying plants** | 1×/10 days | 30 years | 41 years |
+| **Succulents/cacti** | 1×/2 weeks | 34 years | 47 years |
+
+**Key insight:** Device only uses high power when plant actually needs water (~4% of time for typical plant). The rest of the time (96%) it's in ultra-efficient 24h check mode!
+
+**In practice:** Battery will likely outlast the electronics. Plan to replace battery every 10-15 years as a maintenance item, not because it's depleted.
 
 **Recommended Battery:**
-- Samsung INR18650-35E (Protected) 3500mAh
+- Samsung INR18650-35E (Protected) 3500mAh = **~40 year life** (typical)
 - Chemistry: Standard Li-ion (3.0-4.2V)
-- Must remove Pro Mini power LED for stated battery life!
+- **CRITICAL:** Must remove Pro Mini power LED for stated battery life!
 
 ## Troubleshooting
 

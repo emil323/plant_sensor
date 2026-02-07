@@ -189,14 +189,17 @@ Press the **STATUS button** (right button) once to see complete status:
 ## Battery & Maintenance
 
 ### Battery Life
-- **Normal operation:** ~2.4 years on 3500mAh battery
-- **When dry mode:** ~2.4 years (device checks more often, but still efficient!)
-- **When OK mode:** 52+ years (theoretical, checks once per day)
+- **Average houseplant** (1×/week): **~40 years** on 3500mAh
+- **Thirsty plants** (2×/week): ~27 years
+- **Succulents** (1×/2 weeks): ~47 years
+- Device only uses high power when plant actually needs water (~4% of time)
+- Battery will likely outlast the electronics!
+- Plan to replace battery every 10-15 years as preventive maintenance
 
 ### When to Replace Battery
 - LED automatically dims to 50% when battery <10%
-- This gives you ~3 months warning
-- STATUS button shows battery level (see [Checking Status](#check-battery-level))
+- With such long life, you'll likely replace proactively every 10-15 years
+- STATUS button shows battery level (see [Checking Status](#checking-status))
 
 ### Recommended Battery
 - **Samsung INR18650-35E (Protected)** - 3500mAh
@@ -233,7 +236,7 @@ For maximum battery life, the Arduino Pro Mini's power LED should be removed (de
 |---------|---------------|
 | **Sleep Current** | ~5 µA (ultra-low power) |
 | **Measurement Current** | ~15 mA for 2-3 seconds |
-| **Battery Life** | ~2.4 years (3500mAh) |
+| **Battery Life** | 28-47 years (depends on plant) |
 | **Sampling (Dry)** | Every 2 minutes |
 | **Sampling (OK)** | Every 24 hours |
 | **Load Cell Capacity** | 1-5kg (depends on model) |
