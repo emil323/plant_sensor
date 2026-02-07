@@ -1,283 +1,277 @@
 # Plantesensor Brukerhåndbok
+## For når planten din ikke kan sende deg melding når den er tørst 🌱
 
-**Velkommen til ditt intelligente planteovervåkningssystem!** Denne enheten sporer automatisk plantens vannbehov og varsler deg når det er på tide å vanne. Ingen apper, ingen WiFi - bare enkle LED-indikatorer.
+Velkommen til din nye plantepasser! Dette lille dingsene holder øye med plantens vekt døgnet rundt og blinker når det er på tide å vanne. Ingen app, ingen WiFi, intet mas - bare et smart lys som snakker plante.
 
----
-
-## Innholdsfortegnelse
-1. [Hva du har](#hva-du-har)
-2. [Førstegangs oppsett](#førstegangs-oppsett)
-3. [Daglig bruk](#daglig-bruk)
-4. [Forstå LED-mønstre](#forstå-led-mønstre)
-5. [Sjekke status](#sjekke-status)
-6. [Feilsøking](#feilsøking)
-7. [Batteri og vedlikehold](#batteri-og-vedlikehold)
+**Hva den gjør:** Lærer plantens vekt når den er tørr og våt, og varsler deg når den er tørst igjen.  
+**Batterilevetid:** Tiår. Seriøst. Du flytter sannsynligvis før dette trenger nytt batteri.  
+**Din jobb:** Trykk én knapp i starten, så vann som vanlig. Det er det!
 
 ---
 
-## Hva du har
+## Hurtigstart (3 minutter til plantelykke)
 
-Din plantesensor inkluderer:
-- Hovedsensorenhet med vektcelle
-- LED-indikator (synlig fra toppen)
-- To knapper:
-  - **TØR-knapp** (venstre/pin 2)
-  - **STATUS-knapp** (høyre/pin 3)
-- Batterirom (18650 Li-ion celle anbefalt)
-- USB-ladeport (TP4056 lademodul)
+### Hva er hva på enheten din
+
+**Side 1 (Strøm og lading):**
+- 🔘 **PÅ/AV-knapp** - Slå enheten på/av
+- 🔌 **USB-C ladeuttak** - Lad batteriet
+
+**Side 2 (Plantegreiene):**
+- 🔘 **TØR-knapp** - Trykk én gang for å kalibrere
+- 💡 **LED** - Plantens humør-ring
+- 🔘 **STATUS-knapp** - Sjekk batteri og vannnivå
+
+**Inni:**
+- 🔋 Batterirom - Trenger ett 18650 Li-ion batteri
 
 ---
 
-## Førstegangs oppsett
+## Oppsett (Enklere enn å sette opp BankID)
 
-### Steg 1: Installer batteri
-1. Sett inn fulladet 18650 Li-ion batteri (anbefalt: Samsung INR18650-35E Protected)
-2. Pass på riktig polaritet (+ og -)
-3. LED skal begynne å puste sakte (3 pulser) - dette betyr at den er klar til kalibrering
+### 1. Sett inn batteri og slå på
+1. Dunk inn et ladet 18650 batteri (hvilket som helst beskyttet Li-ion funker)
+2. Pass på + og - markeringene (batteriet går uansett ikke inn feil vei)
+3. Trykk på **PÅ/AV-knappen**
+4. LED puster sakte? Du er i gang! 🎉
 
-### Steg 2: Plasser planten din
-1. Plasser sensoren på et stabilt, plant underlag
-2. Sentrer plantepotten din på vektcelleplattformen
-3. Sørg for at planten ikke vil bevege seg eller flytte på seg
+### 2. Plasser planten på vekta
+1. Finn et flatt, stabilt sted (vaklende bord need not apply)
+2. Plasser plantepotta på plattformen
+3. Sentrer den pent - vi har stil
 
-### Steg 3: Kalibrer tørrvekt
-**⚠️ VIKTIG: Gjør dette kun når jorden er TØRR!**
+### 3. Engangskalibrering
+**Vent!** Gjør dette kun når planten din er knusktørr og lei seg. Timing er alt.
 
-1. Vent til plantens jord er helt tørr (klar for vanning)
+1. La planten tørke ut helt (du skulle uansett vannet den i dag, ikke sant?)
 2. Trykk på **TØR-knappen** én gang
-3. LED blinker 3 raske ganger (bekrefter at kalibreringen er lagret)
-4. LED vil nå pulsere én gang hvert 2. minutt (trenger vann)
+3. LED blinker 3 ganger → "Skjønt, sjef! Tørrvekt lagret!" ✅
+4. LED begynner å pulse hvert 2. minutt → "Jepp, trenger fortsatt vann!"
 
-### Steg 4: Vann planten din
-1. Vann planten din normalt med din foretrukne metode:
-   - Toppvanning (rask eller langsom helling)
-   - Bunnvanning
-   - Flere vanningsøkter - alt fungerer!
-2. **Ingen knappetrykk nødvendig!** Sensoren detekterer vanning automatisk
-3. Etter at vanning er detektert og jorden har stabilisert seg, slår LED seg AV
-4. Sensoren din er nå ferdig satt opp! ✅
+### 4. Vann planten din (Den magiske delen)
+Her blir det kult:
 
----
+1. Vann planten akkurat som du vil:
+   - Helle i fra toppen? Kjør på!
+   - Langsom strøm mens du ser på Netflix? Absolutt!
+   - Bunnvanning som en fancy planteeier? Klart det!
+   - Glemme halvveis og komme tilbake senere? Funker fremdeles!
 
-## Daglig bruk
+2. **Ikke trykk på noe.** Sensoren holder øye med og skjønner det selv.
 
-**Gode nyheter: Du trenger ikke gjøre noe!** Sensoren overvåker planten din automatisk.
+3. Vent 10-30 minutter på at overflødig vann renner av.
 
-### Normal drift
+4. LED slår seg av → "Alt bra her! Sees om ei uke!" 😴
 
-**Når planten har det bra:**
-- LED forblir **AV** (planten har nok vann)
-- Sensoren sjekker vekt én gang per dag (sparer batteri)
-- Batteriet varer ~2,4 år før det må byttes
-
-**Når planten trenger vann:**
-- LED pulserer **én gang** hvert 2. minutt (en mild påminnelse)
-- Sensoren sjekker vekt hvert 2. minutt (overvåker for vanning)
-- Bare vann planten din normalt - sensoren detekterer det automatisk!
-- LED slår seg av automatisk etter at vanning er detektert
-
-**Langsiktig neglisjering-varsel:**
-- Hvis planten trenger vann i 14+ dager: LED pulserer **to ganger** hvert 2. minutt
-- Ekstra påminnelse i tilfelle du gikk glipp av tidligere varsler
-
-### Hvordan vanningsdeteksjon fungerer
-
-Sensoren er smart! Den:
-- Sporer vekt over de siste 60 minuttene
-- Detekterer når vekten øker betydelig (vanning!)
-- Venter på at jorden stabiliserer seg og overflødig vann renner av
-- Oppdaterer automatisk sine referansepunkter
-- Ingen knappetrykk nødvendig fra deg!
+**Det var det! Du er ferdig! Sensoren kjenner nå planten din og varsler når den er tørst igjen.**
 
 ---
 
-## Forstå LED-mønstre
+## Dagliglivet (Spoiler: Du gjør ingenting)
 
-| Hva du ser | Hva det betyr | Hva du skal gjøre |
-|------------|---------------|-------------------|
-| **3 langsomme pust** (600ms hver) | Ikke kalibrert ennå | Trykk TØR-knapp når jorden er tørr |
-| **AV** | Planten har det bra! | Ingenting - nyt! ☕ |
-| **1 puls** hvert 2. min | Planten trenger vann | Vann planten din (hvilken som helst metode) |
-| **2 pulser** hvert 2. min | Trenger vann i 14+ dager | Vann planten din snart! |
-| **3 raske blink** | Knappetrykk bekreftet | Du trykket nettopp på en knapp |
-| **3 langsomme pulser** (800ms) | Konfigurasjon slettet | Start på nytt - trykk TØR når jorden er tørr |
-| **LED dimmet** (50% lysstyrke) | Lavt batteri (<10%) | Bytt/lad batteri snart (~3 måneder igjen) |
+Gratulerer! Du har nå verdens mest oppmerksome plantepasser. Her er hva som skjer videre:
 
-**TIPS:** Alle LED-mønstre bruker myk uttoning - aldri harde blink!
+### Når alt er fint 👍
+- **LED: AV** (stillhet er gull)
+- Sensor: Sjekker vekt én gang per dag som en rolig vokter
+- Deg: Lever ditt beste liv uten å tenke på planter
+- Batteri: Teller sakte ned fra 40 år
 
----
+### Når planten blir tørst 💧
+- **LED: Pulser én gang hvert 2. minutt** (forsiktig "hei, husker du meg?")
+- Sensor: Sjekker nå hvert 2. minutt (blir oppmerksomme)
+- Deg: Vann planten når det passer
+- Magi: Sensoren oppdager vanningen automatisk! Ingen knapper!
 
-## Sjekke status
+### Når du har ghostet planten din 🚨
+- **LED: Pulser TO ganger hvert 2. minutt** (etter 2 uker med forsømmelse)
+- Oversettelse: "HALLO?! ER DET NOEN HJEMME?!"
+- Anbefalt handling: Vann planten, kanskje be om unnskyldning
 
-### Sjekk status (Alt-i-ett)
-Trykk på **STATUS-knappen** (høyre knapp) én gang for å se komplett status:
-
-**Steg 1 - Vannnivå:**
-- LED toner opp for å vise nåværende vannprosent
-- Sterkere = mer vann
-- Svakere = mindre vann
-- Holder i 3 sekunder
-
-**Steg 2 - Batterinivå:**
-- LED blinker deretter for å vise batteri:
-  - **4 blink** = 80-100% batteri (utmerket)
-  - **3 blink** = 50-80% batteri (bra)
-  - **2 blink** = 30-50% batteri (ok)
-  - **1 blink** = 10-30% batteri (lavt - vurder å bytte snart)
-  - **Raske blink** = <10% batteri (bytt innen 1-3 måneder)
-
-**Ett knappetrykk = komplett status! 📊**
+### Teknikken (For nysgjerrige)
+Sensoren holder 60 minutters hukommelse av plantens vekt. Når den ser et stort hopp (vanning!), venter den på at ting stabiliserer seg, så oppdaterer den hjernen sin. Du vanner, den lærer. Så enkelt er det.
 
 ---
 
-## Feilsøking
+## LED-oversettelse (Hva sier den?)
 
-### LED puster konstant (3 langsomme pulser)
-**Problem:** Ikke kalibrert ennå
+| Hva du ser | Oversettelse | Ditt neste trekk |
+|------------|--------------|------------------|
+| **3 langsomme pust** | "Jeg er klar! Kalibrer meg!" | Trykk TØR-knapp (når jorden er tørr) |
+| **AV** | "Alt i orden her! 😎" | Chilla. Ta deg en kaffe. |
+| **1 puls** hvert 2. min | "Blir tørst..." | Vann planten (din måte) |
+| **2 pulser** hvert 2. min | "SERIØST TØRST! 😭" | Vann NÅ! Det har gått 2 uker! |
+| **3 raske blink** | "Knappetrykk mottatt!" | Det er bare bekreftelse |
+| **3 langsomme pulser** | "Minne slettet. Fresh start!" | Start oppsett fra begynnelsen |
+| **Dimmere enn vanlig** | "Batteriet blir lavt..." | Sjekk batteri (fortsatt måneder igjen) |
 
+**Fun fact:** Alle fade-effektene er glatte og forsiktige. Denne sensoren har klasse. Ingen harde blink her!
+
+---
+
+## STATUS-knappen (Plantedashbordet)
+
+Trykk på **STATUS-knappen** én gang for komplett avlesning. Som å sjekke batteriet på mobilen... men for ei plante.
+
+### Hva skjer:
+
+**Fase 1: Vannnivå** (3 sekunder)
+- LED toner opp for å vise hvor mye vann som er i jorda
+- 💡 Sterkt = "Bassengfest her inne!"
+- 🕯️ Svakt = "Begynner å bli tørt..."
+- ⚫ Av = "Ørken-vibes"
+
+**Fase 2: Batterinivå** (noen blink)
+- 4 blink ⚡⚡⚡⚡ = 80-100% (fresh batterienergi!)
+- 3 blink ⚡⚡⚡ = 50-80% (går fortsatt sterkt)
+- 2 blink ⚡⚡ = 30-50% (kommer dit... sakte)
+- 1 blink ⚡ = 10-30% (kanskje lade snart)
+- Raske blink ⚡️⚡️⚡️ = <10% (lad innen noen måneder)
+
+**Ett trykk, full plantediagnostikk. Leger hater dette enkle trikset!**
+
+---
+
+## Når det blir rart (Feilsøking)
+
+### LED slutter ikke å puste
+**Hva skjer:** Ikke kalibrert ennå  
+**Løsning:** Vent til jorda er knusktørr, trykk så TØR-knapp. (Hoppet du over oppsettet?)
+
+---
+
+### LED vil ikke slå seg av etter vanning
+**Hva skjer:** Sensoren venter på at ting skal stabilisere seg  
+**Løsning:** 
+- Gi den 30 minutter på at vann skal renne av og jorda stabilisere seg
+- Ikke rist på planten (sensoren prøver å konsentrere seg!)
+- Sjekk at underlaget er stabilt og plant
+- Går fortsatt etter 2 timer? Planten trenger kanskje MER vann (noen potter er lurere)
+
+---
+
+### LED varsler aldri (selv når knusktørr)
+**Hva skjer:** Sensoren vet ikke hva "våt" betyr ennå  
 **Løsning:**
-1. Vent til jorden er helt TØRR
-2. Trykk TØR-knapp én gang
-3. Vann planten normalt når det trengs
+- Vann planten SKIKKELIG grundig (ser du drenering? Bra!)
+- Vent 30 minutter på at drenering stopper
+- Sensoren oppdager vektendringen og lærer
+- LED vil tie når den kjenner våtvekten
 
 ---
 
-### LED slår seg ikke av etter vanning
-**Problem:** Sensoren har ikke detektert stabil vekt ennå
-
+### Knappene ignorerer deg
+**Hva skjer:** Batteriproblem eller du er for forsiktig  
 **Løsning:**
-- Vent 10-30 minutter etter vanning for at overflødig vann skal renne av
-- Sørg for at planten ikke blir flyttet eller støtt til
-- Sjekk at vektcellen er på stabilt underlag
-- Hvis den fortsatt ikke fungerer etter 2 timer, trenger planten kanskje mer vann
+- Sjekk at batteriet er riktig vei (+ og -)
+- Trykk på knappene FAST (de trenger selvtillit!)
+- Hold i 1 helt sekund
+- STATUS-knappen funker men TØR gjør ikke? Trykk hardere. Dette er fysiske knapper, ikke en touchskjerm!
 
 ---
 
-### LED kommer aldri på (selv når planten er tørr)
-**Problem:** Våtvekt-referanse ikke satt ennå
-
-**Løsning:**
-- Dette skjer hvis du kalibrerte tørr, men aldri vannet nok
-- Vann planten grundig (til du ser drenering)
-- Vent på at drenering stopper (~30 min)
-- Sensoren vil auto-detektere og lære våtvekt
-- LED vil slå seg av når våtvekt er lært
+### Vil ha fresh start?
+**Scenario:** Byttet potte, flyttet plante, eller bare føler det kaotisk  
+**Hvordan resette alt:**
+1. Trykk og hold **BEGGE knappene** samtidig i 2 sekunder
+2. LED blinker 3 langsomme pulser → "Minne slettet! Hvem er jeg?!"
+3. Start på nytt fra kalibrering (trykk TØR når jorda er tørr)
 
 ---
 
-### Knappene responderer ikke
-**Problem:** Knappetilkobling eller strømproblem
+## Batteri og vedlikehold (Det kjedelige men viktige)
 
-**Løsning:**
-1. Sjekk at batteriet er riktig installert
-2. Prøv å trykke fast og hold i 1 sekund
-3. Hvis batterinivå vises, men TØR-knappen ikke fungerer, fungerer sensoren - bare trykk hardere
-4. Sjekk for 50ms debounce (ikke trykk for raskt)
+### Batterilevetid: Latterlig lang
+- **De fleste stueplanterne** (vannes ukentlig): ~40 år
+- **Tørste planter** (2×/uke): ~27 år  
+- **Sukkulenter** (lat-vanning): ~47 år
+- **Hvorfor så lenge?** Enheten sover 96% av tiden. Den våkner bare når planten faktisk er tørst.
 
----
+**Ærlig snakk:** Batteriet vil sannsynligvis vare lenger enn elektronikken. Planlegg å bytte det hvert 10-15 år for sikkerhets skyld, ikke fordi det er tomt.
 
-### Ønsker å starte på nytt / rekalibrere
-**Problem:** Du flyttet planten eller byttet potter
+### Når skal du lade/bytte
+- LED dimmer til 50%? Batteri <10%. Har fortsatt MÅNEDER igjen.
+- Trykk STATUS-knapp for eksakt nivå (4 blink = kjempe, 1 blink = lavt)
+- Med 40 års levetid bytter du det nok forebyggende hvert tiår
 
-**Løsning:**
-1. Trykk og hold **BEGGE knappene** i 2 sekunder
-2. LED blinker 3 langsomme pulser (bekrefter tilbakestilling)
-3. Start fra Steg 3 i [Førstegangs oppsett](#steg-3-kalibrer-tørrvekt)
-
----
-
-## Batteri og vedlikehold
-
-### Batterilevetid
-- **Gjennomsnittlig stueplante** (1×/uke): **~40 år** på 3500mAh
-- **Tørste planter** (2×/uke): ~27 år
-- **Sukkulenter** (1×/2 uker): ~47 år
-- Enheten bruker kun høy strøm når planten faktisk trenger vann (~4% av tiden)
-- Batteriet vil sannsynligvis vare lenger enn elektronikken!
-- Planlegg å bytte batteri hvert 10-15 år som forebyggende vedlikehold
-
-### Når skal batteriet byttes
-- LED dimmes automatisk til 50% når batteri <10%
-- Med så lang levetid vil du sannsynligvis bytte proaktivt hvert 10-15 år
-- STATUS-knappen viser batterinivå (se [Sjekke status](#sjekke-status))
-
-### Anbefalt batteri
-- **Samsung INR18650-35E (Protected)** - 3500mAh
-- Må være "protected"-versjon (har innebygd sikkerhetskrets)
-- Button-top foretrekkes for bedre kontakt
+### Hvilket batteri å bruke
+Hvilket som helst beskyttet 18650 Li-ion batteri funker. Anbefalinger:
+- **Samsung INR18650-35E** (3500mAh) - Mesteren, ~40 år
+- Må si "Protected" (innebygd sikkerhetskrets)
+- Button-top er lettere å få plass til
 - Standard Li-ion kjemi (3,0-4,2V)
 
 ### Lading
-- Plugg USB-kabel i ladeporten
-- Rød LED på lader: Lader
-- Grønn LED på lader: Fulladet
-- Kan la planten stå på sensoren mens du lader (ingen avbrudd!)
-
-### Strømoptimalisering
-For maksimal batterilevetid bør Arduino Pro Minis strøm-LED fjernes (loddes av). Dette sparer ~2mA og er kritisk for å oppnå 2+ års batterilevetid. Hvis den ikke fjernes, forvent ~6 måneders batterilevetid i stedet.
+1. Plugg inn USB-kabel (hvilken som helst USB-C funker)
+2. Rødt lys? Lader. Grønt lys? Ferdig.
+3. La planten stå på sensoren mens du lader - ingenting avbrytes!
 
 ### Rengjøring
-- Tørk av vektcelleplattformen med fuktig klut
-- Ikke senk sensoren i vann
-- Hold elektronikk tørr
-- Rengjør regelmessig for å forhindre jordopphopning som påvirker nøyaktighet
+- Tørk av plattformen med fuktig klut når den blir griseete
+- Ikke dunk hele greia i vann (elektronikk er allergisk mot basseng)
+- Rengjør regelmessig - jordopphopning gjør vektavlesningen rar
 
-### Plantevekst
-- Sensoren kompenserer automatisk for plantevekst!
-- Etter hvert som planten vokser tyngre, oppdaterer sensoren sine referanser
-- Ingen rekalibrering nødvendig over tid
-- Maks vekstkompensasjon: 200g om gangen
-
----
-
-## Tekniske spesifikasjoner
-
-| Funksjon | Spesifikasjon |
-|----------|---------------|
-| **Strøm i dvale** | ~5 µA (ultra-lavt strømforbruk) |
-| **Målestrøm** | ~15 mA i 2-3 sekunder |
-| **Batterilevetid** | 28-47 år (avhenger av plante) |
-| **Sampling (Tørr)** | Hvert 2. minutt |
-| **Sampling (OK)** | Hver 24. time |
-| **Vektcellekapasitet** | 1-5kg (avhenger av modell) |
-| **Vektnøyaktighet** | ±5g (stabile målinger) |
-| **Vanningsdeteksjon** | 60-minutters rullerende buffer |
-| **Driftsspenning** | 3,0-4,2V (Li-ion) |
-| **Lavt batteri terskel** | 3,3V (~10% gjenstående) |
+### Plantevekst er automatisk
+Planten din vil vokse. Sensoren vet dette.
+- Etter hvert som planten blir tyngre, oppdaterer sensoren hjernen sin automatisk
+- Ingen rekalibrering nødvendig (med mindre du bytter potte)
+- Maks veksthopp: 200g om gangen (det er én ambisiøs bregne!)
 
 ---
 
-## Tips for best resultat
+## Nerdespecs (For de nysgjerrige)
 
-✅ **GJØR:**
-- Kalibrer TØR når jorden faktisk er knusktørr
-- Bruk stabilt, plant underlag for sensoren
-- Hold planten sentrert på vektcellen
-- Vann normalt - sensoren håndterer hvilken som helst metode!
-- Fjern Arduino strøm-LED for lang batterilevetid
-
-❌ **IKKE GJØR:**
-- Kalibrer tørr på våt/fuktig jord
-- Flytt planten rundt på sensoren
-- Støt til eller ryst sensoren
-- Bekymre deg for vanningsmetode (alle fungerer!)
-- Forvent øyeblikkelige LED-oppdateringer (venter på stabilitet)
+| Greie | Tall |
+|-------|------|
+| **Batterilevetid** | 28-47 år (ingen skrivefeil!) |
+| **Vektkapasitet** | 1-5kg (de fleste stueplanter) |
+| **Nøyaktighet** | ±5g (ganske jævlig presist) |
+| **Strøm i dvale** | 5 µA (sipper batteri som god vin) |
+| **Sjekkfrekvens (tørr)** | Hvert 2. minutt (oppmerksomme) |
+| **Sjekkfrekvens (OK)** | Hver 24. time (chill) |
+| **Driftsspenning** | 3,0-4,2V (standard Li-ion) |
 
 ---
 
-## Trenger du hjelp?
+## Protips (Speed run til årets planteeier)
 
-Hvis du opplever problemer som ikke er dekket i denne håndboken:
-1. Prøv å slette konfigurasjon (begge knapper, 2 sekunder)
-2. Rekalibrere fra bunnen av
-3. Sjekk batterinivå
-4. Verifiser at vektcellen er på stabilt underlag
-5. Sørg for at planten ikke blir flyttet eller vibrert
+### ✅ GJØR dette:
+- Kalibrer når jorda faktisk er tørr (fuktig teller ikke!)
+- Sett sensoren på stabilt, flatt underlag (vaklende bord er fienden)
+- Hold planten sentrert på plattformen (balanse er key)
+- Vann akkurat som du vil - topp, bunn, fort, sakte, sensoren dømmer ikke
+- Rengjør plattformen av og til (tørket jord påvirker vekta)
 
-Fortsatt fast? Sjekk den tekniske README.md eller opprett et issue på GitHub!
+### ❌ IKKE gjør dette:
+- Kalibrer på våt jord (dette forvirrer sensorens lille hjerne)
+- Flytt planten rundt hele tiden (den prøver å konsentrere seg!)
+- Dunk eller ryst sensoren (ville du likt å bli rista mens du jobber?)
+- Bekymre deg for vanningsmetoder (seriøst, alt funker)
+- Forvente instant-oppdateringer (sensoren venter på at ting stabiliserer seg, som en tålmodig forsker)
 
 ---
 
-**Kos deg med din vedlikeholdsfrie plantepleie! 🌱**
+## Fortsatt fast?
 
-Din plantesensor jobber stille i bakgrunnen og passer på planten din slik at du ikke trenger å gjøre det. Når LED-en pulserer, vann planten din. Når den er av, slapp av!
+Hvis denne håndboka ikke løste problemet:
+1. Prøv atomvåpenet: reset alt (begge knapper, 2 sekunder)
+2. Rekalibrere fra scratch (av og til hjelper fresh start)
+3. Sjekk om batteriet faktisk er ladet
+4. Forsikre deg om at underlaget virkelig er stabilt (ikke på vaskemaskin)
+5. Verifiser at du ikke tilfeldigvis flytter planten
+
+Fortsatt ødelagt? Sjekk den tekniske README-en eller åpne et GitHub-issue. Noen vil hjelpe!
+
+---
+
+## Slutten 🌱
+
+**Gratulerer! Du har nå en utrettelig plantepasser.**
+
+Sensoren passer på planten din døgnet rundt så du slipper. Når LED-en pulser, vann planten. Når den er stille, lev livet ditt.
+
+Må plantene dine for alltid være hydrert og samvittigheten din for alltid være ren.
+
+*— Plantesensor-teamet ditt*
+
+P.S. Batteriet vil sannsynligvis overleve stueplanteen din. Bare så du vet.
