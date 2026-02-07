@@ -153,15 +153,18 @@ Hvis du har byttet potte eller vil starte på nytt:
 ## Batteri og vedlikehold
 
 ### Batteritid 🔋
-- Vanlig stueplante (1 gang/uke): ca. 40 år
-- Tørste planter (2 ganger/uke): ca. 27 år
-- Sukkulenter (sjelden): ca. 47 år
+- Vanlig stueplante (1 gang/uke): ca. 23 år (2000mAh)
+- Tørste planter (2 ganger/uke): ca. 15 år (2000mAh)
+- Sukkulenter (sjelden): ca. 27 år (2000mAh)
 
 Batteriet holder så lenge fordi enheten sover mesteparten av tiden.
 
+**Viktig:** Bruk ubeskyttede celler! Beskyttede celler har ekstra krets som bruker 10-50 µA, og kan halvere batterilevetiden. TP4056 laderen har allerede beskyttelse innebygd.
+
 ### Hvilket batteri
-- 18650 Li-ion batteri (beskyttet versjon)
-- Anbefaling: Samsung INR18650-35E (3500mAh)
+- 18650 Li-ion batteri (**ubeskyttet** versjon)
+- Anbefaling: 2000-2500mAh er nok (Samsung 25R, LG HG2, Sony VTC6)
+- Større (3500mAh) er overkill - varer 40+ år
 - Finnes på nett eller i elektronikkbutikker
 
 ### Lading 🔌

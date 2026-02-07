@@ -148,22 +148,26 @@ All LED patterns use smooth PWM fading for a polished appearance.
 
 **Battery Life** (Realistic Usage):
 
-Watering frequency varies by plant, season, and conditions. Here's what to expect:
+Watering frequency varies by plant, season, and conditions. Here's what to expect with **unprotected cells** (no parasitic protection circuit drain):
 
-| Plant Type | Watering Frequency | 2500mAh | 3500mAh |
-|------------|-------------------|---------|---------|
-| **Thirsty plants** | 2×/week (e.g., ferns) | 19 years | 27 years |
-| **Average houseplant** | 1×/week (most common) | **28 years** | **40 years** |
-| **Slow-drying plants** | 1×/10 days | 30 years | 41 years |
-| **Succulents/cacti** | 1×/2 weeks | 34 years | 47 years |
+| Plant Type | Watering Frequency | 2000mAh | 2500mAh | 3500mAh |
+|------------|-------------------|---------|---------|---------|
+| **Thirsty plants** | 2×/week (e.g., ferns) | 15 years | 19 years | 27 years |
+| **Average houseplant** | 1×/week (most common) | **23 years** | **28 years** | 40 years |
+| **Slow-drying plants** | 1×/10 days | 24 years | 30 years | 41 years |
+| **Succulents/cacti** | 1×/2 weeks | 27 years | 34 years | 47 years |
+
+**Important:** Using **protected** cells adds 10-50 µA parasitic drain, cutting battery life by 50-80%! The TP4056 charger module already provides protection, so unprotected cells are better.
 
 **Key insight:** Device only uses high power when plant actually needs water (~4% of time for typical plant). The rest of the time (96%) it's in ultra-efficient 24h check mode!
 
 **In practice:** Battery will likely outlast the electronics. Plan to replace battery every 10-15 years as a maintenance item, not because it's depleted.
 
 **Recommended Battery:**
-- Samsung INR18650-35E (Protected) 3500mAh = **~40 year life** (typical)
+- **Unprotected** 18650 Li-ion cell (2000-2500mAh recommended)
+- Examples: Samsung 25R, Sony VTC6, LG HG2
 - Chemistry: Standard Li-ion (3.0-4.2V)
+- **Why unprotected?** The TP4056 charger module already provides protection (over-charge, over-discharge, short-circuit). Protected cells add a parasitic drain (10-50 µA) that can cut battery life in half!
 - **CRITICAL:** Must remove Pro Mini power LED for stated battery life!
 
 ## Troubleshooting
