@@ -195,11 +195,13 @@ Press the **STATUS button** once for a complete readout. It's like checking your
 - With 40-year life, you'll probably change it preemptively every decade
 
 ### What Battery to Use
-Any protected 18650 Li-ion battery works. Recommendations:
-- **Samsung INR18650-35E** (3500mAh) - The champion, ~40 years
-- Must say "Protected" (built-in safety circuit)
+**Unprotected 18650 Li-ion** (2000-2500mAh is plenty):
+- **Samsung 25R** (2500mAh) - Great balance, ~23 years
+- **LG HG2** (3000mAh) - High capacity option
+- **Sony VTC6** (3000mAh) - Another good choice
 - Button-top is easier to fit
 - Standard Li-ion chemistry (3.0-4.2V)
+- **Why unprotected?** The TP4056 charger module already has protection built-in! Protected cells just add a parasitic drain (10-50 µA) that cuts battery life in half.
 
 ### Charging
 1. Plug in USB cable (any USB-C will do)
