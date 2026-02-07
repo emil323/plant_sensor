@@ -1,283 +1,277 @@
 # Plant Sensor User Manual
+## Because plants can't text you when they're thirsty 🌱
 
-**Welcome to your intelligent plant monitoring system!** This device automatically tracks your plant's water needs and alerts you when it's time to water. No apps, no WiFi - just simple LED indicators.
+Welcome to your new plant babysitter! This little gadget watches your plant's weight 24/7 and flashes an LED when it's time to water. No apps, no WiFi, no drama - just a smart light that speaks plant.
 
----
-
-## Table of Contents
-1. [What You Have](#what-you-have)
-2. [First Time Setup](#first-time-setup)
-3. [Daily Use](#daily-use)
-4. [Understanding LED Patterns](#understanding-led-patterns)
-5. [Checking Status](#checking-status)
-6. [Troubleshooting](#troubleshooting)
-7. [Battery & Maintenance](#battery--maintenance)
+**What it does:** Learns your plant's weight when dry and wet, then alerts you when it's thirsty again.  
+**Battery life:** Decades. Seriously. You'll probably move house before this needs a new battery.  
+**Your job:** Press one button at the start, then water normally. That's it!
 
 ---
 
-## What You Have
+## Quick Start (3 Minutes to Plant Bliss)
 
-Your plant sensor includes:
-- Main sensor unit with load cell
-- LED indicator (visible from top)
-- Two buttons:
-  - **DRY button** (left/pin 2)
-  - **STATUS button** (right/pin 3)
-- Battery compartment (18650 Li-ion cell recommended)
-- USB charging port (TP4056 charger module)
+### What's On Your Device
+
+**Side 1 (Power & Charging):**
+- 🔘 **ON/OFF button** - Turn device on/off
+- 🔌 **USB-C charging port** - Charge your battery
+
+**Side 2 (Plant Business):**
+- 🔘 **DRY button** - Press once to calibrate
+- 💡 **LED** - Your plant's mood ring
+- 🔘 **STATUS button** - Check battery & water levels
+
+**Inside:**
+- 🔋 Battery compartment - Needs one 18650 Li-ion battery
 
 ---
 
-## First Time Setup
+## Setup (Easier than assembling IKEA furniture)
 
-### Step 1: Install Battery
-1. Insert fully charged 18650 Li-ion battery (recommended: Samsung INR18650-35E Protected)
-2. Observe correct polarity (+ and -)
-3. LED should start breathing slowly (3 pulses) - this means it's ready to calibrate
+### 1. Insert Battery & Power On
+1. Pop in a charged 18650 battery (any protected Li-ion will do)
+2. Mind the + and - markings (battery won't fit backwards anyway)
+3. Press the **ON/OFF button**
+4. LED breathes slowly? You're in business! 🎉
 
-### Step 2: Position Your Plant
-1. Place the sensor on a stable, level surface
-2. Center your potted plant on the load cell platform
-3. Make sure the plant won't move or shift
+### 2. Put Plant On Scale
+1. Find a flat, stable spot (wobbly tables need not apply)
+2. Place your potted plant on the platform
+3. Center it nicely - we're classy like that
 
-### Step 3: Calibrate Dry Weight
-**⚠️ IMPORTANT: Only do this when soil is DRY!**
+### 3. The One-Time Calibration
+**Wait!** Only do this when your plant is bone dry and sad. Timing is everything.
 
-1. Wait until your plant's soil is completely dry (ready for watering)
+1. Let your plant dry out completely (you were going to water it today anyway, right?)
 2. Press the **DRY button** once
-3. LED flashes 3 quick times (confirms calibration saved)
-4. LED will now pulse once every 2 minutes (needs water)
+3. LED flashes 3 times → "Got it, boss! Dry weight saved!" ✅
+4. LED starts pulsing every 2 minutes → "Yep, still needs water!"
 
-### Step 4: Water Your Plant
-1. Water your plant normally using your preferred method:
-   - Top watering (fast or slow pour)
-   - Bottom watering
-   - Multiple watering sessions - all work!
-2. **No button press needed!** The sensor automatically detects watering
-3. After watering is detected and soil stabilizes, LED turns OFF
-4. Your sensor is now fully set up! ✅
+### 4. Water Your Plant (The Magic Part)
+This is where it gets cool:
 
----
+1. Water your plant however you want:
+   - Dump it in from the top? Sure!
+   - Slow trickle while you watch Netflix? Go ahead!
+   - Bottom watering like a fancy plant parent? Absolutely!
+   - Forget halfway through and come back later? Still works!
 
-## Daily Use
+2. **Don't press anything.** The sensor is watching and will figure it out.
 
-**Good news: You don't need to do anything!** The sensor monitors your plant automatically.
+3. Wait 10-30 minutes for excess water to drain.
 
-### Normal Operation
+4. LED turns off → "All good here! See you in a week!" 😴
 
-**When Plant is OK:**
-- LED stays **OFF** (plant has enough water)
-- Sensor checks weight once per day (saves battery)
-- Battery lasts ~2.4 years before needing replacement
-
-**When Plant Needs Water:**
-- LED pulses **once** every 2 minutes (gentle reminder)
-- Sensor checks weight every 2 minutes (watching for watering)
-- Just water your plant normally - sensor auto-detects!
-- LED turns off automatically after watering detected
-
-**Long-term Neglect Warning:**
-- If plant needs water for 14+ days: LED pulses **twice** every 2 minutes
-- Extra reminder in case you missed earlier alerts
-
-### How Watering Detection Works
-
-The sensor is smart! It:
-- Tracks weight over the last 60 minutes
-- Detects when weight increases significantly (watering!)
-- Waits for soil to stabilize and excess water to drain
-- Automatically updates its reference points
-- No button press needed from you!
+**That's it! You're done! The sensor now knows your plant and will alert you when it's thirsty again.**
 
 ---
 
-## Understanding LED Patterns
+## Daily Life (Spoiler: You Do Nothing)
 
-| What You See | What It Means | What To Do |
-|--------------|---------------|------------|
-| **3 slow breaths** (600ms each) | Not calibrated yet | Press DRY button when soil is dry |
-| **OFF** | Plant is OK! | Nothing - enjoy! ☕ |
-| **1 pulse** every 2 min | Plant needs water | Water your plant (any method) |
-| **2 pulses** every 2 min | Needs water for 14+ days | Water your plant soon! |
-| **3 quick flashes** | Button press confirmed | You just pressed a button |
-| **3 slow pulses** (800ms) | Config cleared | Start over - press DRY when soil dry |
-| **LED dimmed** (50% brightness) | Battery low (<10%) | Replace/recharge battery soon (~3 months left) |
+Congratulations! You now have the world's most attentive plant sitter. Here's what happens next:
 
-**TIP:** All LED patterns use smooth fading - never harsh blinking!
+### When Everything is Fine 👍
+- **LED: OFF** (silence is golden)
+- Sensor: Checking weight once per day like a chill guardian
+- You: Living your best life, not worrying about plants
+- Battery: Slowly counting down from 40 years
 
----
+### When Plant Gets Thirsty 💧
+- **LED: Pulses once every 2 minutes** (gentle "hey, remember me?")
+- Sensor: Now checking every 2 minutes (getting attentive)
+- You: Water the plant whenever convenient
+- Magic: Sensor detects the watering automatically! No button press!
 
-## Checking Status
+### When You've Been Ghosting Your Plant 🚨
+- **LED: Pulses TWICE every 2 minutes** (after 2 weeks of neglect)
+- Translation: "HELLO?! IS ANYONE HOME?!"
+- Recommended action: Water the plant, maybe apologize
 
-### Check Status (All-in-One)
-Press the **STATUS button** (right button) once to see complete status:
-
-**Step 1 - Water Level:**
-- LED fades up to show current water percentage
-- Brighter = more water
-- Dimmer = less water
-- Holds for 3 seconds
-
-**Step 2 - Battery Level:**
-- LED then flashes to show battery:
-  - **4 flashes** = 80-100% battery (excellent)
-  - **3 flashes** = 50-80% battery (good)
-  - **2 flashes** = 30-50% battery (okay)
-  - **1 flash** = 10-30% battery (low - consider replacing soon)
-  - **Rapid flashing** = <10% battery (replace within 1-3 months)
-
-**One button press = complete status! 📊**
+### The Tech (For Curious Folks)
+The sensor keeps a 60-minute memory of your plant's weight. When it sees a big jump (watering!), it waits for things to stabilize, then updates its brain. You water, it learns. Simple as that.
 
 ---
 
-## Troubleshooting
+## LED Translation Guide (What's It Saying?)
 
-### LED breathing constantly (3 slow pulses)
-**Problem:** Not calibrated yet
+| What You See | Translation | Your Move |
+|--------------|-------------|-----------|
+| **3 slow breaths** | "I'm ready! Calibrate me!" | Press DRY button (when soil is dry) |
+| **OFF** | "All good here! 😎" | Chill. Have some coffee. |
+| **1 pulse** every 2 min | "Getting thirsty..." | Water the plant (your way) |
+| **2 pulses** every 2 min | "SERIOUSLY THIRSTY! 😭" | Water now! It's been 2 weeks! |
+| **3 quick flashes** | "Button press received!" | That's just confirmation |
+| **3 slow pulses** | "Memory wiped. Fresh start!" | Start setup from beginning |
+| **Dimmer than usual** | "Battery getting low..." | Check battery (still months left) |
 
-**Solution:**
-1. Wait until soil is completely DRY
-2. Press DRY button once
-3. Water plant normally when needed
-
----
-
-### LED won't turn off after watering
-**Problem:** Sensor hasn't detected stable weight yet
-
-**Solution:**
-- Wait 10-30 minutes after watering for excess water to drain
-- Make sure plant isn't being moved or bumped
-- Check that load cell is on stable surface
-- If still not working after 2 hours, plant might need more water
+**Fun fact:** All the fades are smooth and gentle. This sensor has class. No harsh blinking here!
 
 ---
 
-### LED never comes on (even when plant is dry)
-**Problem:** Wet weight reference not set yet
+## STATUS Button (The Plant Dashboard)
 
-**Solution:**
-- This happens if you calibrated dry but never watered enough
-- Water plant thoroughly (until you see drainage)
-- Wait for drainage to stop (~30 min)
-- Sensor will auto-detect and learn wet weight
-- LED will turn off once wet weight is learned
+Press the **STATUS button** once for a complete readout. It's like checking your phone's battery... but for a plant.
 
----
+### What Happens:
 
-### Buttons don't respond
-**Problem:** Button wiring or power issue
+**Phase 1: Water Level** (3 seconds)
+- LED fades up to show how much water is in the soil
+- 💡 Bright = "Pool party in here!"
+- 🕯️ Dim = "Getting parched..."
+- ⚫ Off = "Desert vibes"
 
-**Solution:**
-1. Check battery is installed correctly
-2. Try pressing firmly and holding 1 second
-3. If battery level shows but DRY button doesn't work, sensor is working - just needs harder press
-4. Check for 50ms debounce (don't press too quickly)
+**Phase 2: Battery Level** (a few flashes)
+- 4 flashes ⚡⚡⚡⚡ = 80-100% (fresh battery energy!)
+- 3 flashes ⚡⚡⚡ = 50-80% (still going strong)
+- 2 flashes ⚡⚡ = 30-50% (getting there... slowly)
+- 1 flash ⚡ = 10-30% (might want to charge soon)
+- Rapid flashing ⚡️⚡️⚡️ = <10% (charge within a few months)
 
----
-
-### Want to start over / recalibrate
-**Problem:** You moved the plant or changed pots
-
-**Solution:**
-1. Press and hold **BOTH buttons** for 2 seconds
-2. LED flashes 3 slow pulses (confirms reset)
-3. Start from Step 3 in [First Time Setup](#step-3-calibrate-dry-weight)
+**One press, full plant diagnostics. Doctors hate this simple trick!**
 
 ---
 
-## Battery & Maintenance
+## When Things Get Weird (Troubleshooting)
 
-### Battery Life
-- **Average houseplant** (1×/week): **~40 years** on 3500mAh
-- **Thirsty plants** (2×/week): ~27 years
-- **Succulents** (1×/2 weeks): ~47 years
-- Device only uses high power when plant actually needs water (~4% of time)
-- Battery will likely outlast the electronics!
-- Plan to replace battery every 10-15 years as preventive maintenance
+### LED Won't Stop Breathing
+**What's happening:** Not calibrated yet  
+**Fix:** Wait for soil to dry completely, then press DRY button. (Did you skip the setup?)
 
-### When to Replace Battery
-- LED automatically dims to 50% when battery <10%
-- With such long life, you'll likely replace proactively every 10-15 years
-- STATUS button shows battery level (see [Checking Status](#checking-status))
+---
 
-### Recommended Battery
-- **Samsung INR18650-35E (Protected)** - 3500mAh
-- Must be "protected" version (has built-in safety circuit)
-- Button-top preferred for better contact
+### LED Won't Turn Off After Watering
+**What's happening:** Sensor is waiting for things to settle  
+**Fix:** 
+- Give it 30 minutes for water to drain and soil to stabilize
+- Don't jiggle the plant (sensor's trying to concentrate!)
+- Make sure surface is stable and level
+- Still going after 2 hours? Plant might need MORE water (some pots are sneaky)
+
+---
+
+### LED Never Alerts (Even When Bone Dry)
+**What's happening:** Sensor doesn't know what "wet" means yet  
+**Fix:**
+- Water the plant REALLY thoroughly (see drainage? Good!)
+- Wait 30 minutes for drainage to stop
+- Sensor will detect the weight change and learn
+- LED will shut up once it knows the wet weight
+
+---
+
+### Buttons Ignore You
+**What's happening:** Battery issue or you're too gentle  
+**Fix:**
+- Check battery is in right way around (+ and -)
+- Press buttons FIRMLY (they need confidence!)
+- Hold for 1 full second
+- STATUS button works but DRY doesn't? Press harder. These are physical buttons, not a touchscreen!
+
+---
+
+### Want a Fresh Start?
+**Scenario:** Changed pots, moved plant, or just feeling chaotic  
+**How to reset everything:**
+1. Press and hold **BOTH buttons** together for 2 seconds
+2. LED flashes 3 slow pulses → "Memory erased! Who am I?!"
+3. Restart from calibration (press DRY when soil is dry)
+
+---
+
+## Battery & Maintenance (The Boring But Important Stuff)
+
+### Battery Life: Ridiculously Long
+- **Most houseplants** (watered weekly): ~40 years
+- **Thirsty plants** (2×/week): ~27 years  
+- **Succulents** (lazy watering): ~47 years
+- **Why so long?** Device is asleep 96% of the time. It only wakes up to work when your plant is actually thirsty.
+
+**Real talk:** The battery will probably outlast the electronics. Plan to swap it every 10-15 years just to be safe, not because it's dead.
+
+### When to Charge/Replace
+- LED dims to 50%? Battery <10%. Still have MONTHS left.
+- Press STATUS button to see exact level (4 flashes = great, 1 flash = low)
+- With 40-year life, you'll probably change it preemptively every decade
+
+### What Battery to Use
+Any protected 18650 Li-ion battery works. Recommendations:
+- **Samsung INR18650-35E** (3500mAh) - The champion, ~40 years
+- Must say "Protected" (built-in safety circuit)
+- Button-top is easier to fit
 - Standard Li-ion chemistry (3.0-4.2V)
 
 ### Charging
-- Plug USB cable into charging port
-- Red LED on charger: Charging
-- Green LED on charger: Fully charged
-- Can leave plant on sensor while charging (no interruption!)
-
-### Power Optimization
-For maximum battery life, the Arduino Pro Mini's power LED should be removed (desoldered). This saves ~2mA and is critical for achieving 2+ year battery life. If not removed, expect ~6 months battery life instead.
+1. Plug in USB cable (any USB-C will do)
+2. Red light? Charging. Green light? Done.
+3. Leave plant on sensor while charging - nothing interrupts!
 
 ### Cleaning
-- Wipe load cell platform with damp cloth
-- Don't submerge sensor in water
-- Keep electronics dry
-- Clean regularly to prevent soil buildup affecting accuracy
+- Wipe platform with damp cloth when it gets crusty
+- Don't dunk the whole thing in water (electronics are allergic to pools)
+- Clean regularly - soil buildup makes weight readings wonky
 
-### Plant Growth
-- Sensor automatically compensates for plant growth!
-- As plant grows heavier, sensor updates its references
-- No recalibration needed over time
-- Max growth compensation: 200g at once
-
----
-
-## Technical Specifications
-
-| Feature | Specification |
-|---------|---------------|
-| **Sleep Current** | ~5 µA (ultra-low power) |
-| **Measurement Current** | ~15 mA for 2-3 seconds |
-| **Battery Life** | 28-47 years (depends on plant) |
-| **Sampling (Dry)** | Every 2 minutes |
-| **Sampling (OK)** | Every 24 hours |
-| **Load Cell Capacity** | 1-5kg (depends on model) |
-| **Weight Accuracy** | ±5g (stable readings) |
-| **Watering Detection** | 60-minute rolling buffer |
-| **Operating Voltage** | 3.0-4.2V (Li-ion) |
-| **Low Battery Threshold** | 3.3V (~10% remaining) |
+### Plant Growth is Automatic
+Your plant will grow. The sensor knows this.
+- As plant gets heavier, sensor updates its brain automatically
+- No recalibration needed (unless you change pots)
+- Max growth jump: 200g at once (that's one ambitious fern!)
 
 ---
 
-## Tips for Best Results
+## Nerdy Specs (For the Curious)
 
-✅ **DO:**
-- Calibrate DRY when soil is actually bone dry
-- Use stable, level surface for sensor
-- Keep plant centered on load cell
-- Water normally - sensor handles any method!
-- Remove Arduino power LED for long battery life
-
-❌ **DON'T:**
-- Calibrate dry on wet/damp soil
-- Move plant around on sensor
-- Bump or jostle the sensor
-- Worry about watering method (all work!)
-- Expect instant LED updates (waits for stability)
+| Thing | Number |
+|-------|--------|
+| **Battery life** | 28-47 years (no typo!) |
+| **Weight capacity** | 1-5kg (most houseplants) |
+| **Accuracy** | ±5g (pretty darn precise) |
+| **Sleep power** | 5 µA (sips battery like fine wine) |
+| **Check frequency (dry)** | Every 2 minutes (attentive) |
+| **Check frequency (OK)** | Every 24 hours (chill) |
+| **Operating voltage** | 3.0-4.2V (standard Li-ion) |
 
 ---
 
-## Need Help?
+## Pro Tips (Speed Run to Plant Parent of the Year)
 
-If you're experiencing issues not covered in this manual:
-1. Try clearing configuration (both buttons, 2 seconds)
-2. Recalibrate from scratch
-3. Check battery level
-4. Verify load cell is on stable surface
-5. Make sure plant isn't being moved or vibrated
+### ✅ DO These Things:
+- Calibrate when soil is actually dry (damp doesn't count!)
+- Put sensor on a stable, flat surface (wobbly tables are the enemy)
+- Keep plant centered on the platform (balance is key)
+- Water however you want - top, bottom, fast, slow, the sensor doesn't judge
+- Clean the platform occasionally (crusty soil affects weight)
 
-Still stuck? Check the technical README.md or raise an issue on GitHub!
+### ❌ DON'T Do These Things:
+- Calibrate on wet soil (this confuses the sensor's tiny brain)
+- Keep moving the plant around (it's trying to concentrate!)
+- Bump or jostle the sensor (would you like being shaken while working?)
+- Worry about watering methods (seriously, anything works)
+- Expect instant updates (sensor waits for things to stabilize, like a patient scientist)
 
 ---
 
-**Enjoy your low-maintenance plant care! 🌱**
+## Still Stuck?
 
-Your plant sensor works silently in the background, watching over your plant so you don't have to. When the LED pulses, water your plant. When it's off, relax!
+If this manual didn't solve your problem:
+1. Try the nuclear option: reset everything (both buttons, 2 seconds)
+2. Recalibrate from scratch (sometimes a fresh start helps)
+3. Check if battery is actually charged
+4. Make sure surface is truly stable (not on a washing machine)
+5. Verify you're not accidentally moving the plant
+
+Still broken? Check the technical README or open a GitHub issue. Someone will help!
+
+---
+
+## The End 🌱
+
+**Congrats! You now have a tireless plant babysitter.**
+
+The sensor watches your plant 24/7 so you don't have to. When the LED pulses, water your plant. When it's quiet, live your life. 
+
+May your plants be forever hydrated and your conscience forever clear.
+
+*— Your Plant Sensor Team*
+
+P.S. The battery will probably outlive your houseplant. Just saying.
