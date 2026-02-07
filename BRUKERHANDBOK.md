@@ -109,21 +109,24 @@ Sensoren er smart! Den:
 
 ## Sjekke status
 
-### Sjekk batterinivå
-1. Trykk på **STATUS-knappen** (høyre knapp)
-2. Tell blinkene:
-   - **4 blink** = 80-100% batteri (utmerket)
-   - **3 blink** = 50-80% batteri (bra)
-   - **2 blink** = 30-50% batteri (ok)
-   - **1 blink** = 10-30% batteri (lavt - vurder å bytte snart)
-   - **Raske blink** = <10% batteri (bytt innen 1-3 måneder)
+### Sjekk status (Alt-i-ett)
+Trykk på **STATUS-knappen** (høyre knapp) én gang for å se komplett status:
 
-### Sjekk vannnivå
-Trykk og hold **STATUS-knappen** i 1+ sekund:
-- LED-lysstyrke viser vannprosent
+**Steg 1 - Vannnivå:**
+- LED toner opp for å vise nåværende vannprosent
 - Sterkere = mer vann
 - Svakere = mindre vann
-- AV = trenger vanning
+- Holder i 3 sekunder
+
+**Steg 2 - Batterinivå:**
+- LED blinker deretter for å vise batteri:
+  - **4 blink** = 80-100% batteri (utmerket)
+  - **3 blink** = 50-80% batteri (bra)
+  - **2 blink** = 30-50% batteri (ok)
+  - **1 blink** = 10-30% batteri (lavt - vurder å bytte snart)
+  - **Raske blink** = <10% batteri (bytt innen 1-3 måneder)
+
+**Ett knappetrykk = komplett status! 📊**
 
 ---
 

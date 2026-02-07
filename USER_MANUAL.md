@@ -109,21 +109,24 @@ The sensor is smart! It:
 
 ## Checking Status
 
-### Check Battery Level
-1. Press the **STATUS button** (right button)
-2. Count the flashes:
-   - **4 flashes** = 80-100% battery (excellent)
-   - **3 flashes** = 50-80% battery (good)
-   - **2 flashes** = 30-50% battery (okay)
-   - **1 flash** = 10-30% battery (low - consider replacing soon)
-   - **Rapid flashing** = <10% battery (replace within 1-3 months)
+### Check Status (All-in-One)
+Press the **STATUS button** (right button) once to see complete status:
 
-### Check Water Level
-Press and hold the **STATUS button** for 1+ second:
-- LED brightness shows water percentage
+**Step 1 - Water Level:**
+- LED fades up to show current water percentage
 - Brighter = more water
 - Dimmer = less water
-- OFF = needs watering
+- Holds for 3 seconds
+
+**Step 2 - Battery Level:**
+- LED then flashes to show battery:
+  - **4 flashes** = 80-100% battery (excellent)
+  - **3 flashes** = 50-80% battery (good)
+  - **2 flashes** = 30-50% battery (okay)
+  - **1 flash** = 10-30% battery (low - consider replacing soon)
+  - **Rapid flashing** = <10% battery (replace within 1-3 months)
+
+**One button press = complete status! 📊**
 
 ---
 
