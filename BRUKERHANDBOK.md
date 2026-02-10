@@ -1,225 +1,112 @@
-# Plantesensor Brukerveiledning
+# Plantesensor Brukerveiledning 🌱
 
-En enkel sensor som forteller deg når planten trenger vann 🌱
+**Sensor som varsler når planten trenger vann. Batteriet varer i flere tiår.**
 
-Ingen app, ingen WiFi - bare et lys som varsler.
+## Hva er hva
 
-**Hvordan det fungerer:** Lærer seg vekten når planten er tørr og våt, og varsler når den trenger vann igjen.  
-**Batteritid:** Mange år (typisk 30-40 år)  
-**Det du må gjøre:** Trykk én knapp første gang, så vanner du som vanlig.
+**Side 1:** 🔘 PÅ/AV-knapp | 🔌 USB-C ladeport  
+**Side 2:** 🔘 TØRR-knapp • 💡 LED-lys • 🔘 STATUS-knapp  
+**Innsiden:** 🔋 18650 batteri (2000-2500mAh ubeskyttet anbefales)
 
----
+## Oppsett (3 minutter)
 
-## Kom i gang
+**1. Slå på**  
+Sett inn ladet 18650 batteri → Trykk PÅ/AV → LED blinker sakte = klar ✅
 
-### Hva er hva
+**2. Plasser planten**  
+Sett planten på vekten. Stabilt og jevnt underlag. Sentrer planten.
 
-**Side 1:**
-- 🔘 PÅ/AV-knapp
-- 🔌 USB-C ladeport
+**3. Kalibrer (KUN når jorda er tørr!)**  
+La planten bli helt tørr → Trykk TØRR-knappen én gang → LED blinker 3× = lagret ✅  
+LED pulser nå hvert 2. minutt = "trenger vann"
 
-**Side 2:**
-- 🔘 TØRR-knapp (til venstre)
-- 💡 LED-lys (i midten)
-- 🔘 STATUS-knapp (til høyre)
+**4. Vann planten**  
+Vann som vanlig (topp, bunn, tregt, fort - alt fungerer!)  
+**Ikke trykk noen knapper.** Vent 10-30 min for drenering.  
+LED slår seg av automatisk = ferdig! 🎉
 
-**Innsiden:**
-- 🔋 Batterirom (trenger 18650 batteri)
-
----
-
-## Oppsett
-
-### 1. Sett inn batteri og slå på
-- Sett inn et ladet 18650 batteri 🔋
-- Trykk PÅ/AV-knappen
-- LED-en blinker sakte = klar til bruk ✅
-
-### 2. Plasser planten
-- Finn et stabilt, jevnt underlag
-- Sett planten på vekten
-- Sørg for at underlaget ikke rister eller vagler
-
-### 3. Kalibrer tørrvekt
-**Viktig:** Gjør dette når jorda er helt tørr! ⚠️
-
-- Vent til planten er tørr (klar til å vannes)
-- Trykk TØRR-knappen én gang
-- LED-en blinker 3 ganger = lagret ✅
-- LED-en begynner å pulse hvert 2. minutt = trenger vann 💧
-
-### 4. Vann planten
-- Vann planten som vanlig (topp, bunn - hva som helst fungerer)
-- Ikke trykk noen knapper
-- Vent 10-30 minutter
-- LED-en slår seg av = ferdig! 🎉
-
-Sensoren oppdager vanningen automatisk og lærer seg våtvekten.
-
----
+**Sensoren lærer våtvekten automatisk. Ferdig!**
 
 ## Daglig bruk
 
-Når oppsettet er ferdig, gjør sensoren alt automatisk.
-
-### Når planten har nok vann ✅
-- LED-en er av
-- Sensoren sjekker vekten én gang per dag
-- Du gjør ingenting
-
-### Når planten trenger vann 💧
-- LED-en pulser hvert 2. minutt
-- Sensoren sjekker oftere (hver 2. minutt)
-- Vann planten når du får tid
-- LED-en slår seg av automatisk etter vanning
-
-### Hvis du glemmer å vanne ⚠️
-- LED-en pulser to ganger hvert 2. minutt (etter 2 uker)
-- Dette betyr "planten har trengt vann lenge"
-
-### Hvordan sensoren lærer 🧠
-Sensoren husker vekten de siste 60 minuttene. Når vekten øker mye (vanning), venter den til jorda er stabil, og oppdaterer seg selv. Ingen knapper å trykke.
-
----
+**LED AV** = Planten har det bra. Sensoren sjekker daglig. Du gjør ingenting.  
+**LED pulser 1×/2min** = Planten er tørst. Vann når det passer. LED stopper automatisk.  
+**LED pulser 2×/2min** = Veldig tørst (2+ uker). Vann snart!
 
 ## Hva LED-en betyr
 
-| Hva du ser | Betydning | Hva du gjør |
-|------------|-----------|-------------|
-| Blinker sakte (3 ganger) | Ikke kalibrert | Trykk TØRR-knapp når jorda er tørr |
+| LED-mønster | Betydning | Handling |
+|-------------|-----------|----------|
+| Blinker sakte | Ikke kalibrert | Trykk TØRR når tørr |
 | Av | Alt OK | Ingenting |
-| 1 puls hvert 2. min | Trenger vann | Vann planten |
-| 2 pulser hvert 2. min | Trengt vann lenge (2+ uker) | Vann planten snart |
-| 3 raske blink | Knapp trykket | Bekreftelse |
-| 3 langsomme pulser | Alt slettet | Start på nytt |
+| 1 puls/2min | Tørst | Vann planten |
+| 2 pulser/2min | Veldig tørst! | Vann nå |
+| 3 raske blink | Knapp bekreftet | - |
+| 3 langsomme pulser | Nullstilt | Kalibrer på nytt |
 | Svakere lys | Lavt batteri | Lad snart |
 
----
+## STATUS-knapp
 
-## Sjekk status
+**Trykk én gang for diagnostikk:**
 
-Trykk STATUS-knappen for å se:
+**Fase 1 (3 sek):** Vannnivå  
+• Sterkt lys = mye vann  
+• Svakt lys = lite vann  
+• Av = tørr
 
-**1. Vannnivå** (3 sekunder) 💧
-- LED-en viser hvor mye vann som er i jorda
-- Sterkt lys = mye vann
-- Svakt lys = lite vann
-
-**2. Batterinivå** (antall blink) 🔋
-- 4 blink = 80-100%
-- 3 blink = 50-80%
-- 2 blink = 30-50%
-- 1 blink = 10-30%
-- Raske blink = under 10%
-
----
+**Fase 2 (blink):** Batterinivå  
+• 4 blink = 80-100%  
+• 3 blink = 50-80%  
+• 2 blink = 30-50%  
+• 1 blink = 10-30%  
+• Raske blink = <10% (lad snart)
 
 ## Feilsøking
 
-### LED-en blinker hele tiden
-**Problem:** Ikke kalibrert  
-**Løsning:** Vent til jorda er tørr, trykk TØRR-knapp
+**LED blinker hele tiden**  
+→ Ikke kalibrert. Vent til jorda er tørr, trykk TØRR-knapp.
 
-### LED-en slår seg ikke av etter vanning
-**Problem:** Venter på at jorda stabiliserer seg  
-**Løsning:** 
-- Vent 30 minutter ⏱️
-- Ikke flytt planten
-- Sjekk at underlaget er stabilt
-- Fortsatt problem etter 2 timer? Planten trenger kanskje mer vann 💧
+**LED slår seg ikke av etter vanning**  
+→ Vent 30 min for drenering. Ikke flytt planten. Fortsatt på? Trenger kanskje mer vann.
 
-### LED-en varsler aldri
-**Problem:** Våtvekten er ikke lært ennå  
-**Løsning:**
-- Vann planten grundig (til vann renner ut i bunnen)
-- Vent 30 minutter
-- Sensoren lærer seg våtvekten automatisk
+**LED varsler aldri**  
+→ Våtvekt ikke lært. Vann grundig til det drenerer, vent 30 min.
 
-### Knappene virker ikke
-**Problem:** Batteri eller kontakt  
-**Løsning:**
-- Sjekk at batteriet er riktig vei 🔋
-- Trykk hardere (fysiske knapper)
-- Hold inne i 1 sekund
+**Knappene virker ikke**  
+→ Sjekk batteripolaritet. Trykk HARDT og hold i 1 sekund.
 
-### Nullstill alt 🔄
-Hvis du har byttet potte eller vil starte på nytt:
-- Hold inne begge knappene samtidig i 2 sekunder
-- LED-en blinker 3 ganger = alt slettet
-- Start oppsett på nytt
-
----
+**Nullstill alt**  
+→ Hold BEGGE knapper i 2 sekunder → LED blinker 3× = slettet → Kalibrer på nytt.
 
 ## Batteri og vedlikehold
 
-### Batteritid 🔋
-- Vanlig stueplante (1 gang/uke): ca. 23 år (2000mAh)
-- Tørste planter (2 ganger/uke): ca. 15 år (2000mAh)
-- Sukkulenter (sjelden): ca. 27 år (2000mAh)
+**Batteritid:** 20-40 år typisk (enheten sover 96% av tiden)
 
-Batteriet holder så lenge fordi enheten sover mesteparten av tiden.
+**Bruk ubeskyttede 18650-celler** (2000-2500mAh):  
+• Samsung 25R (2500mAh)  
+• LG HG2 (3000mAh)  
+• Sony VTC6 (3000mAh)
 
-**Viktig:** Bruk ubeskyttede celler! Beskyttede celler har ekstra krets som bruker 10-50 µA, og kan halvere batterilevetiden. TP4056 laderen har allerede beskyttelse innebygd.
+*Hvorfor ubeskyttet?* TP4056 laderen har beskyttelse. Beskyttede celler sløser 50% batteri på parasittisk forbruk.
 
-### Hvilket batteri
-- 18650 Li-ion batteri (**ubeskyttet** versjon)
-- Anbefaling: 2000-2500mAh er nok (Samsung 25R, LG HG2, Sony VTC6)
-- Større (3500mAh) er overkill - varer 40+ år
-- Finnes på nett eller i elektronikkbutikker
+**Lading:** Plugg USB-C → Rødt lys = lader → Grønt = ferdig
 
-### Lading 🔌
-- Plugg inn USB-C kabel
-- Rødt lys = lader
-- Grønt lys = ferdig
-- Planten kan stå på vekten mens du lader
+**Rengjøring:** Tørk plattformen med fuktig klut. Ikke dypp enheten.
 
-### Rengjøring 🧹
-- Tørk av plattformen med fuktig klut når det blir skittent
-- Ikke dypp enheten i vann
-- Rengjør av og til - jord påvirker nøyaktigheten
+**Plantevekst:** Sensoren justerer seg selv. Ingen rekalibrering nødvendig (med mindre du bytter potte).
 
-### Plantevekst 🌱
-Sensoren oppdaterer seg selv når planten vokser. Ingen rekalibrering nødvendig (med mindre du bytter potte).
+## Gjør og ikke gjør
+
+**✅ Gjør:**  
+• Kalibrer på helt tørr jord  
+• Bruk stabilt, jevnt underlag  
+• Vann som du vil
+
+**❌ Ikke gjør:**  
+• Kalibrer på fuktig jord  
+• Flytt planten unødvendig  
+• Rist eller dunk sensoren
 
 ---
 
-## Tekniske detaljer
-
-| Spesifikasjon | Verdi |
-|---------------|-------|
-| Batteritid | 28-47 år |
-| Vektkapasitet | 1-5 kg |
-| Nøyaktighet | ±5 gram |
-| Strømforbruk (dvale) | 5 µA |
-| Sjekker vekt (tørr) | Hvert 2. minutt |
-| Sjekker vekt (OK) | Hver 24. time |
-
----
-
-## Tips
-
-**Gjør:** ✅
-- Kalibrer når jorda er helt tørr
-- Sett på stabilt underlag
-- Vann som du pleier
-
-**Ikke gjør:** ❌
-- Kalibrer når jorda er fuktig
-- Flytt planten unødvendig
-- Rist eller dunk vekten
-
----
-
-## Trenger mer hjelp?
-
-Hvis problemet ikke er dekket her:
-1. Prøv å nullstille (hold begge knapper i 2 sekunder)
-2. Sjekk at batteriet er ladet
-3. Sjekk at underlaget er stabilt
-4. Se den tekniske dokumentasjonen (README.md)
-
----
-
-**Lykke til med planten din! 🌱**
-
-Sensoren gjør jobben sin stille i bakgrunnen. Når LED-en pulser, vann planten. Når den er av, er alt bra.
+**Lykke til med planten! 🌱** Sensoren passer på 24/7. Når LED pulser, vann. Når den er stille, alt er bra. Batteriet varer nok lenger enn planten.
