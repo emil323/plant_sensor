@@ -32,7 +32,7 @@
  * - OFF: Plant is OK (checks once per day)
  * - Auto-dim: LED brightness reduces to 50% when battery <10% (~3 months left)
  * 
- * Battery Life: ~2.4 years on 2500mAh 18650
+ * Battery Life: 15-28 years on 2000-2500mAh 18650 (unprotected cells)
  * EEPROM Life: 960+ years (buffer stored in RAM only to prevent wear)
  */
 

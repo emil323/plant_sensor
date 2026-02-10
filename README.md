@@ -6,7 +6,7 @@ Arduino Pro Mini plant monitor using HX711 load cell. Adaptive sampling (2 min w
 
 ## Features
 
-- **Adaptive Deep Sleep**: 2 min when dry, 24h when OK (~2.4 year battery life)
+- **Adaptive Deep Sleep**: 2 min when dry, 24h when OK (15-28 year battery life)
 - **Automatic Watering Detection**: No button press needed after watering
 - **60-Minute Windowed Accumulation**: Handles slow/interrupted watering
 - **Battery Level Indicator**: Visual battery status (1-4 flashes)
